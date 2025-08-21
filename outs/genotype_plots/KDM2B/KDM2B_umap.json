@@ -1,0 +1,440 @@
+{
+  "data": [
+    {
+      "x": [-5.5969319223596408, -3.921999919338401, -2.7718081354333717, -2.7495162367059547, -5.2412767290307833, -3.5369827627374488, -3.2878367780877906, -4.6320218919946505, -5.1683559297754122, -4.3640112756921603, -2.4652988790704566, -2.7138728975488502, -5.2398714899255587, -2.7273568987085182, -4.8573808550073458, -7.8867230295373751, -3.894721972866233, -4.6469607233239962, -5.5419974207116915, -5.1718006014062716, -3.809930074138816, -3.7060890077783424, -2.5404047846032936, -3.2474467634393531, -4.6344318269922091, -5.6931304811670138, -2.75407122365969, -5.3661446451379611, -4.1319415449334933, -5.1064596056176974, -5.5750145792199923, -3.3104414819909889, -5.007584083004172, -2.6389481901361305, -3.3710868238641578, -3.1093551992608863, -4.1710212110711886, -4.9364304422571017, -4.6293344377710177, -4.4549527048303439, -4.6600966333581759, -3.647330033703025, -3.1138715624048072, -5.1988510965539767, -2.8063838361932594, -5.2839498399926974, -5.5982184290124728, -5.0798859476281955, -3.0546865343286354, -2.2853543638421852, -3.7495243429376441, -4.5846791147424533, -4.3298735498620822, -3.0790235876275855, -2.6023745416833717, -5.4247422098352267, -5.4826636194421603, -4.1714579939081027, -4.937612044735129, -4.8498921274377658, -5.3243985056115939, -2.6125383257104713, -4.3278093218042208, -2.8996431707574684, -5.6815690874292208, -4.8410692094995333, -5.1706213831140353, -3.7281627535058814, -5.5057911752893283, -4.8795766710473849, -5.1005215524865939, -5.0722932695581271, -2.5656528352929908, -2.907428967876609, -5.1689543604089572, -5.2430796503259494, -4.2017593263818576, -5.6859159349634005, -4.7806105493738009, -3.9380445360376197, -3.4330470442010719, -4.19471310369509, -2.3199541448785621, -2.2731585382654029, -5.4923024057580783, -3.1834618925287086, -4.666730868740256, -5.3264837145044162, -7.2364749788476779, -2.8351673959924537, -5.1330537676050021, -5.1828780054284884, -4.9507503389550997],
+      "y": [-5.0999171949443465, -6.397690079313243, -5.9341323591289168, -6.5076058126506453, -6.049984715085948, -4.3888991094646101, -5.9198692060527449, -7.2529518819865828, -4.1252043462810164, -3.0119643426952005, -5.9042799688396101, -6.6471874929484969, -6.1225631452617293, -6.845697662931407, -6.2947948194560652, -4.455187580686534, -4.297174713712657, -4.0854466177043562, -5.8379204488811141, -2.7742088056621195, -6.8463113523540144, -7.1546657301005965, -5.6528837896403914, -3.7144315458354593, -7.1893947340068465, -5.0764510847148543, -6.6780407644328719, -4.8947336889323836, -3.8783052183208109, -2.7805309511241556, -5.7639959074077254, -4.399615070920909, -2.7430477357921244, -5.8562171674785262, -6.9767468191203719, -4.0869424558696394, -2.9977359987315775, -6.5778238988933211, -2.8434152818736673, -2.6576256967601419, -2.7792513586101175, -6.7844908453044539, -5.8411252714213973, -5.8706987119731551, -5.8183558202800398, -5.9414699293193465, -5.4806425787028914, -6.6925976491984969, -7.1180007673320418, -6.9008820272502547, -3.3975060201701761, -2.9712507940349222, -5.0672815061626082, -5.0798127866801863, -6.2261002279338484, -4.7651493764934187, -4.7235801435527449, -7.2169487691936141, -6.1960180021342879, -3.0167634702739359, -5.1377895093974715, -6.4157297826823836, -3.280017874341929, -6.3718302465495711, -5.3456690527019148, -2.7172746873912454, -5.1554925657329207, -4.9728796697673445, -4.7020733572063094, -6.311609528165782, -3.9708733774242044, -6.6729476667461043, -6.7263753629741316, -5.5906174398479109, -3.6203305936870218, -5.7603142477092391, -6.5666697240886336, -5.2536785818156844, -2.8602795816478372, -3.9517774797496439, -6.8436582304057723, -4.163897297483409, -7.0906865812358504, -5.5607283330974226, -4.0132928110179549, -6.109390518766368, -2.3665189958629251, -2.6696231580791117, -3.9777846551952005, -5.426043293577159, -3.1937201238689066, -2.6139464593944193, -2.327787182432139],
+      "text": ["RPCAUMAP_1:  -5.5969319<br />RPCAUMAP_2:  -5.09991719<br />celltype: ESC", "RPCAUMAP_1:  -3.9219999<br />RPCAUMAP_2:  -6.39769008<br />celltype: ESC", "RPCAUMAP_1:  -2.7718081<br />RPCAUMAP_2:  -5.93413236<br />celltype: ESC", "RPCAUMAP_1:  -2.7495162<br />RPCAUMAP_2:  -6.50760581<br />celltype: ESC", "RPCAUMAP_1:  -5.2412767<br />RPCAUMAP_2:  -6.04998472<br />celltype: ESC", "RPCAUMAP_1:  -3.5369828<br />RPCAUMAP_2:  -4.38889911<br />celltype: ESC", "RPCAUMAP_1:  -3.2878368<br />RPCAUMAP_2:  -5.91986921<br />celltype: ESC", "RPCAUMAP_1:  -4.6320219<br />RPCAUMAP_2:  -7.25295188<br />celltype: ESC", "RPCAUMAP_1:  -5.1683559<br />RPCAUMAP_2:  -4.12520435<br />celltype: ESC", "RPCAUMAP_1:  -4.3640113<br />RPCAUMAP_2:  -3.01196434<br />celltype: ESC", "RPCAUMAP_1:  -2.4652989<br />RPCAUMAP_2:  -5.90427997<br />celltype: ESC", "RPCAUMAP_1:  -2.7138729<br />RPCAUMAP_2:  -6.64718749<br />celltype: ESC", "RPCAUMAP_1:  -5.2398715<br />RPCAUMAP_2:  -6.12256315<br />celltype: ESC", "RPCAUMAP_1:  -2.7273569<br />RPCAUMAP_2:  -6.84569766<br />celltype: ESC", "RPCAUMAP_1:  -4.8573809<br />RPCAUMAP_2:  -6.29479482<br />celltype: ESC", "RPCAUMAP_1:  -7.8867230<br />RPCAUMAP_2:  -4.45518758<br />celltype: ESC", "RPCAUMAP_1:  -3.8947220<br />RPCAUMAP_2:  -4.29717471<br />celltype: ESC", "RPCAUMAP_1:  -4.6469607<br />RPCAUMAP_2:  -4.08544662<br />celltype: ESC", "RPCAUMAP_1:  -5.5419974<br />RPCAUMAP_2:  -5.83792045<br />celltype: ESC", "RPCAUMAP_1:  -5.1718006<br />RPCAUMAP_2:  -2.77420881<br />celltype: ESC", "RPCAUMAP_1:  -3.8099301<br />RPCAUMAP_2:  -6.84631135<br />celltype: ESC", "RPCAUMAP_1:  -3.7060890<br />RPCAUMAP_2:  -7.15466573<br />celltype: ESC", "RPCAUMAP_1:  -2.5404048<br />RPCAUMAP_2:  -5.65288379<br />celltype: ESC", "RPCAUMAP_1:  -3.2474468<br />RPCAUMAP_2:  -3.71443155<br />celltype: ESC", "RPCAUMAP_1:  -4.6344318<br />RPCAUMAP_2:  -7.18939473<br />celltype: ESC", "RPCAUMAP_1:  -5.6931305<br />RPCAUMAP_2:  -5.07645108<br />celltype: ESC", "RPCAUMAP_1:  -2.7540712<br />RPCAUMAP_2:  -6.67804076<br />celltype: ESC", "RPCAUMAP_1:  -5.3661446<br />RPCAUMAP_2:  -4.89473369<br />celltype: ESC", "RPCAUMAP_1:  -4.1319415<br />RPCAUMAP_2:  -3.87830522<br />celltype: ESC", "RPCAUMAP_1:  -5.1064596<br />RPCAUMAP_2:  -2.78053095<br />celltype: ESC", "RPCAUMAP_1:  -5.5750146<br />RPCAUMAP_2:  -5.76399591<br />celltype: ESC", "RPCAUMAP_1:  -3.3104415<br />RPCAUMAP_2:  -4.39961507<br />celltype: ESC", "RPCAUMAP_1:  -5.0075841<br />RPCAUMAP_2:  -2.74304774<br />celltype: ESC", "RPCAUMAP_1:  -2.6389482<br />RPCAUMAP_2:  -5.85621717<br />celltype: ESC", "RPCAUMAP_1:  -3.3710868<br />RPCAUMAP_2:  -6.97674682<br />celltype: ESC", "RPCAUMAP_1:  -3.1093552<br />RPCAUMAP_2:  -4.08694246<br />celltype: ESC", "RPCAUMAP_1:  -4.1710212<br />RPCAUMAP_2:  -2.99773600<br />celltype: ESC", "RPCAUMAP_1:  -4.9364304<br />RPCAUMAP_2:  -6.57782390<br />celltype: ESC", "RPCAUMAP_1:  -4.6293344<br />RPCAUMAP_2:  -2.84341528<br />celltype: ESC", "RPCAUMAP_1:  -4.4549527<br />RPCAUMAP_2:  -2.65762570<br />celltype: ESC", "RPCAUMAP_1:  -4.6600966<br />RPCAUMAP_2:  -2.77925136<br />celltype: ESC", "RPCAUMAP_1:  -3.6473300<br />RPCAUMAP_2:  -6.78449085<br />celltype: ESC", "RPCAUMAP_1:  -3.1138716<br />RPCAUMAP_2:  -5.84112527<br />celltype: ESC", "RPCAUMAP_1:  -5.1988511<br />RPCAUMAP_2:  -5.87069871<br />celltype: ESC", "RPCAUMAP_1:  -2.8063838<br />RPCAUMAP_2:  -5.81835582<br />celltype: ESC", "RPCAUMAP_1:  -5.2839498<br />RPCAUMAP_2:  -5.94146993<br />celltype: ESC", "RPCAUMAP_1:  -5.5982184<br />RPCAUMAP_2:  -5.48064258<br />celltype: ESC", "RPCAUMAP_1:  -5.0798859<br />RPCAUMAP_2:  -6.69259765<br />celltype: ESC", "RPCAUMAP_1:  -3.0546865<br />RPCAUMAP_2:  -7.11800077<br />celltype: ESC", "RPCAUMAP_1:  -2.2853544<br />RPCAUMAP_2:  -6.90088203<br />celltype: ESC", "RPCAUMAP_1:  -3.7495243<br />RPCAUMAP_2:  -3.39750602<br />celltype: ESC", "RPCAUMAP_1:  -4.5846791<br />RPCAUMAP_2:  -2.97125079<br />celltype: ESC", "RPCAUMAP_1:  -4.3298735<br />RPCAUMAP_2:  -5.06728151<br />celltype: ESC", "RPCAUMAP_1:  -3.0790236<br />RPCAUMAP_2:  -5.07981279<br />celltype: ESC", "RPCAUMAP_1:  -2.6023745<br />RPCAUMAP_2:  -6.22610023<br />celltype: ESC", "RPCAUMAP_1:  -5.4247422<br />RPCAUMAP_2:  -4.76514938<br />celltype: ESC", "RPCAUMAP_1:  -5.4826636<br />RPCAUMAP_2:  -4.72358014<br />celltype: ESC", "RPCAUMAP_1:  -4.1714580<br />RPCAUMAP_2:  -7.21694877<br />celltype: ESC", "RPCAUMAP_1:  -4.9376120<br />RPCAUMAP_2:  -6.19601800<br />celltype: ESC", "RPCAUMAP_1:  -4.8498921<br />RPCAUMAP_2:  -3.01676347<br />celltype: ESC", "RPCAUMAP_1:  -5.3243985<br />RPCAUMAP_2:  -5.13778951<br />celltype: ESC", "RPCAUMAP_1:  -2.6125383<br />RPCAUMAP_2:  -6.41572978<br />celltype: ESC", "RPCAUMAP_1:  -4.3278093<br />RPCAUMAP_2:  -3.28001787<br />celltype: ESC", "RPCAUMAP_1:  -2.8996432<br />RPCAUMAP_2:  -6.37183025<br />celltype: ESC", "RPCAUMAP_1:  -5.6815691<br />RPCAUMAP_2:  -5.34566905<br />celltype: ESC", "RPCAUMAP_1:  -4.8410692<br />RPCAUMAP_2:  -2.71727469<br />celltype: ESC", "RPCAUMAP_1:  -5.1706214<br />RPCAUMAP_2:  -5.15549257<br />celltype: ESC", "RPCAUMAP_1:  -3.7281628<br />RPCAUMAP_2:  -4.97287967<br />celltype: ESC", "RPCAUMAP_1:  -5.5057912<br />RPCAUMAP_2:  -4.70207336<br />celltype: ESC", "RPCAUMAP_1:  -4.8795767<br />RPCAUMAP_2:  -6.31160953<br />celltype: ESC", "RPCAUMAP_1:  -5.1005216<br />RPCAUMAP_2:  -3.97087338<br />celltype: ESC", "RPCAUMAP_1:  -5.0722933<br />RPCAUMAP_2:  -6.67294767<br />celltype: ESC", "RPCAUMAP_1:  -2.5656528<br />RPCAUMAP_2:  -6.72637536<br />celltype: ESC", "RPCAUMAP_1:  -2.9074290<br />RPCAUMAP_2:  -5.59061744<br />celltype: ESC", "RPCAUMAP_1:  -5.1689544<br />RPCAUMAP_2:  -3.62033059<br />celltype: ESC", "RPCAUMAP_1:  -5.2430797<br />RPCAUMAP_2:  -5.76031425<br />celltype: ESC", "RPCAUMAP_1:  -4.2017593<br />RPCAUMAP_2:  -6.56666972<br />celltype: ESC", "RPCAUMAP_1:  -5.6859159<br />RPCAUMAP_2:  -5.25367858<br />celltype: ESC", "RPCAUMAP_1:  -4.7806105<br />RPCAUMAP_2:  -2.86027958<br />celltype: ESC", "RPCAUMAP_1:  -3.9380445<br />RPCAUMAP_2:  -3.95177748<br />celltype: ESC", "RPCAUMAP_1:  -3.4330470<br />RPCAUMAP_2:  -6.84365823<br />celltype: ESC", "RPCAUMAP_1:  -4.1947131<br />RPCAUMAP_2:  -4.16389730<br />celltype: ESC", "RPCAUMAP_1:  -2.3199541<br />RPCAUMAP_2:  -7.09068658<br />celltype: ESC", "RPCAUMAP_1:  -2.2731585<br />RPCAUMAP_2:  -5.56072833<br />celltype: ESC", "RPCAUMAP_1:  -5.4923024<br />RPCAUMAP_2:  -4.01329281<br />celltype: ESC", "RPCAUMAP_1:  -3.1834619<br />RPCAUMAP_2:  -6.10939052<br />celltype: ESC", "RPCAUMAP_1:  -4.6667309<br />RPCAUMAP_2:  -2.36651900<br />celltype: ESC", "RPCAUMAP_1:  -5.3264837<br />RPCAUMAP_2:  -2.66962316<br />celltype: ESC", "RPCAUMAP_1:  -7.2364750<br />RPCAUMAP_2:  -3.97778466<br />celltype: ESC", "RPCAUMAP_1:  -2.8351674<br />RPCAUMAP_2:  -5.42604329<br />celltype: ESC", "RPCAUMAP_1:  -5.1330538<br />RPCAUMAP_2:  -3.19372012<br />celltype: ESC", "RPCAUMAP_1:  -5.1828780<br />RPCAUMAP_2:  -2.61394646<br />celltype: ESC", "RPCAUMAP_1:  -4.9507503<br />RPCAUMAP_2:  -2.32778718<br />celltype: ESC"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(68,119,170,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-7.9852361559106662, -7.0353817819787814, -8.8280167459680392, -7.8584260820581271],
+      "y": [-4.7131779409465437, -3.7222686029491068, -4.5590417600688582, -4.4710834241923934],
+      "text": ["RPCAUMAP_1:  -7.9852362<br />RPCAUMAP_2:  -4.71317794<br />celltype: ESC_DE", "RPCAUMAP_1:  -7.0353818<br />RPCAUMAP_2:  -3.72226860<br />celltype: ESC_DE", "RPCAUMAP_1:  -8.8280167<br />RPCAUMAP_2:  -4.55904176<br />celltype: ESC_DE", "RPCAUMAP_1:  -7.8584261<br />RPCAUMAP_2:  -4.47108342<br />celltype: ESC_DE"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(238,102,119,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(238,102,119,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "ESC_DE",
+      "legendgroup": "ESC_DE",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-7.9766411661340548, -7.9564862131311251, -10.112040030880149, -8.5153956293298556, -9.296651351375754, -9.1453347086145236, -9.1590561746789767, -7.363482463283713, -6.9251642107202365, -8.5307688593103244, -8.6830677866174533, -8.4519705652429415, -8.9736332773401095, -7.4318103670312716, -9.4576249002649142, -2.6778023122979957, -7.7909011720849826, -6.7001576303674533, -9.1511492609216525, -8.0310220598413302, -9.3203043817712619, -5.8583879350854708, -6.4907460092737033, -8.0932850717737033, -8.8712305902673556, -7.987411963863547, -6.8765926241113497, -7.0427474855615451, -8.8083071588708712, -7.9595813631250216, -7.7702216982080294, -8.0016012071801974, -6.8118343233300997, -9.1056446909143283, -8.9307331918908908, -9.6203026651574923, -8.3856348871423556, -6.8897495149804904, -9.3236222147180392, -9.1997218012048556, -7.7494621156884982, -8.1922125696374728, -2.5313253282739479, -9.4658770441247775, -8.4292302011682345, -6.9099974512292697, -8.5550351022912814, -8.8328461527063205],
+      "y": [1.2202489160480854, -3.7260303712901712, -0.71404560576053877, -2.6717844224986673, -1.1200651145991924, -2.3073847509441019, 0.20209521879581191, -1.5227512336787823, -3.5821094728526712, -3.1425466753062845, -0.82752462397190352, -0.32244875202747603, -0.90146025190922041, 0.67655292977718096, -1.1749503828105572, -0.24991529355617784, -0.63867374430271406, -1.934156916242564, -0.081076498281681758, -0.96954049835773726, -0.5500869370517375, -3.7179925657329203, -2.3093033052501322, -2.2903661943492533, -2.9476611829814554, -3.3671553350505472, -0.69298859606357832, 0.28286115159419756, -2.8681767202434183, 0.50233534802821855, -1.487205765348399, -0.32110982308956404, -0.66904839048954268, -1.4226178146419171, -1.1623587823924664, -2.6361382223186136, -3.0459318376598001, -2.3472728944835306, 0.019046866196667931, -0.17445490429970048, 0.85000864495662432, -2.151571533781016, 0.20409306218055465, -1.2510342813548687, -2.7578349329051615, -2.9610948778209329, -2.9967260576305033, -2.8192618108806253],
+      "text": ["RPCAUMAP_1:  -7.9766412<br />RPCAUMAP_2:   1.22024892<br />celltype: DE", "RPCAUMAP_1:  -7.9564862<br />RPCAUMAP_2:  -3.72603037<br />celltype: DE", "RPCAUMAP_1: -10.1120400<br />RPCAUMAP_2:  -0.71404561<br />celltype: DE", "RPCAUMAP_1:  -8.5153956<br />RPCAUMAP_2:  -2.67178442<br />celltype: DE", "RPCAUMAP_1:  -9.2966514<br />RPCAUMAP_2:  -1.12006511<br />celltype: DE", "RPCAUMAP_1:  -9.1453347<br />RPCAUMAP_2:  -2.30738475<br />celltype: DE", "RPCAUMAP_1:  -9.1590562<br />RPCAUMAP_2:   0.20209522<br />celltype: DE", "RPCAUMAP_1:  -7.3634825<br />RPCAUMAP_2:  -1.52275123<br />celltype: DE", "RPCAUMAP_1:  -6.9251642<br />RPCAUMAP_2:  -3.58210947<br />celltype: DE", "RPCAUMAP_1:  -8.5307689<br />RPCAUMAP_2:  -3.14254668<br />celltype: DE", "RPCAUMAP_1:  -8.6830678<br />RPCAUMAP_2:  -0.82752462<br />celltype: DE", "RPCAUMAP_1:  -8.4519706<br />RPCAUMAP_2:  -0.32244875<br />celltype: DE", "RPCAUMAP_1:  -8.9736333<br />RPCAUMAP_2:  -0.90146025<br />celltype: DE", "RPCAUMAP_1:  -7.4318104<br />RPCAUMAP_2:   0.67655293<br />celltype: DE", "RPCAUMAP_1:  -9.4576249<br />RPCAUMAP_2:  -1.17495038<br />celltype: DE", "RPCAUMAP_1:  -2.6778023<br />RPCAUMAP_2:  -0.24991529<br />celltype: DE", "RPCAUMAP_1:  -7.7909012<br />RPCAUMAP_2:  -0.63867374<br />celltype: DE", "RPCAUMAP_1:  -6.7001576<br />RPCAUMAP_2:  -1.93415692<br />celltype: DE", "RPCAUMAP_1:  -9.1511493<br />RPCAUMAP_2:  -0.08107650<br />celltype: DE", "RPCAUMAP_1:  -8.0310221<br />RPCAUMAP_2:  -0.96954050<br />celltype: DE", "RPCAUMAP_1:  -9.3203044<br />RPCAUMAP_2:  -0.55008694<br />celltype: DE", "RPCAUMAP_1:  -5.8583879<br />RPCAUMAP_2:  -3.71799257<br />celltype: DE", "RPCAUMAP_1:  -6.4907460<br />RPCAUMAP_2:  -2.30930331<br />celltype: DE", "RPCAUMAP_1:  -8.0932851<br />RPCAUMAP_2:  -2.29036619<br />celltype: DE", "RPCAUMAP_1:  -8.8712306<br />RPCAUMAP_2:  -2.94766118<br />celltype: DE", "RPCAUMAP_1:  -7.9874120<br />RPCAUMAP_2:  -3.36715534<br />celltype: DE", "RPCAUMAP_1:  -6.8765926<br />RPCAUMAP_2:  -0.69298860<br />celltype: DE", "RPCAUMAP_1:  -7.0427475<br />RPCAUMAP_2:   0.28286115<br />celltype: DE", "RPCAUMAP_1:  -8.8083072<br />RPCAUMAP_2:  -2.86817672<br />celltype: DE", "RPCAUMAP_1:  -7.9595814<br />RPCAUMAP_2:   0.50233535<br />celltype: DE", "RPCAUMAP_1:  -7.7702217<br />RPCAUMAP_2:  -1.48720577<br />celltype: DE", "RPCAUMAP_1:  -8.0016012<br />RPCAUMAP_2:  -0.32110982<br />celltype: DE", "RPCAUMAP_1:  -6.8118343<br />RPCAUMAP_2:  -0.66904839<br />celltype: DE", "RPCAUMAP_1:  -9.1056447<br />RPCAUMAP_2:  -1.42261781<br />celltype: DE", "RPCAUMAP_1:  -8.9307332<br />RPCAUMAP_2:  -1.16235878<br />celltype: DE", "RPCAUMAP_1:  -9.6203027<br />RPCAUMAP_2:  -2.63613822<br />celltype: DE", "RPCAUMAP_1:  -8.3856349<br />RPCAUMAP_2:  -3.04593184<br />celltype: DE", "RPCAUMAP_1:  -6.8897495<br />RPCAUMAP_2:  -2.34727289<br />celltype: DE", "RPCAUMAP_1:  -9.3236222<br />RPCAUMAP_2:   0.01904687<br />celltype: DE", "RPCAUMAP_1:  -9.1997218<br />RPCAUMAP_2:  -0.17445490<br />celltype: DE", "RPCAUMAP_1:  -7.7494621<br />RPCAUMAP_2:   0.85000864<br />celltype: DE", "RPCAUMAP_1:  -8.1922126<br />RPCAUMAP_2:  -2.15157153<br />celltype: DE", "RPCAUMAP_1:  -2.5313253<br />RPCAUMAP_2:   0.20409306<br />celltype: DE", "RPCAUMAP_1:  -9.4658770<br />RPCAUMAP_2:  -1.25103428<br />celltype: DE", "RPCAUMAP_1:  -8.4292302<br />RPCAUMAP_2:  -2.75783493<br />celltype: DE", "RPCAUMAP_1:  -6.9099975<br />RPCAUMAP_2:  -2.96109488<br />celltype: DE", "RPCAUMAP_1:  -8.5550351<br />RPCAUMAP_2:  -2.99672606<br />celltype: DE", "RPCAUMAP_1:  -8.8328462<br />RPCAUMAP_2:  -2.81926181<br />celltype: DE"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(34,136,51,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-3.8473327039911109, -6.120245444698508, -4.2219810365869357],
+      "y": [1.3331192516270038, 4.0127961420002336, 2.4993135713520407],
+      "text": ["RPCAUMAP_1:  -3.8473327<br />RPCAUMAP_2:   1.33311925<br />celltype: PFG", "RPCAUMAP_1:  -6.1202454<br />RPCAUMAP_2:   4.01279614<br />celltype: PFG", "RPCAUMAP_1:  -4.2219810<br />RPCAUMAP_2:   2.49931357<br />celltype: PFG"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,187,68,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(204,187,68,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "PFG",
+      "legendgroup": "PFG",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-2.6887843488885719, -0.85630540840166369, -1.5142850755884008],
+      "y": [0.46331102480319719, 3.193478801149404, 2.1543237947407126],
+      "text": ["RPCAUMAP_1:  -2.6887843<br />RPCAUMAP_2:   0.46331102<br />celltype: PP", "RPCAUMAP_1:  -0.8563054<br />RPCAUMAP_2:   3.19347880<br />celltype: PP", "RPCAUMAP_1:  -1.5142851<br />RPCAUMAP_2:   2.15432379<br />celltype: PP"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(170,51,119,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(170,51,119,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "PP",
+      "legendgroup": "PP",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [6.0657515645788358],
+      "y": [-1.732785484891856],
+      "text": "RPCAUMAP_1:   6.0657516<br />RPCAUMAP_2:  -1.73278548<br />celltype: SC-beta",
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(86,180,233,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(86,180,233,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "SC-beta",
+      "legendgroup": "SC-beta",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [8.5673823476598905],
+      "y": [3.1703545831623434],
+      "text": "RPCAUMAP_1:   8.5673823<br />RPCAUMAP_2:   3.17035458<br />celltype: SC-delta",
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,114,178,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(0,114,178,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "SC-delta",
+      "legendgroup": "SC-delta",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-4.8047466158105685, -5.4117364763452365],
+      "y": [5.865974643129384, 4.6102578424396867],
+      "text": ["RPCAUMAP_1:  -4.8047466<br />RPCAUMAP_2:   5.86597464<br />celltype: Ductal", "RPCAUMAP_1:  -5.4117365<br />RPCAUMAP_2:   4.61025784<br />celltype: Ductal"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(213,94,0,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [2.4662346959875268],
+      "y": [-14.728336117368663],
+      "text": "RPCAUMAP_1:   2.4662347<br />RPCAUMAP_2: -14.72833612<br />celltype: Endothelial",
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(136,34,85,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(136,34,85,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "Endothelial",
+      "legendgroup": "Endothelial",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "x": [-4.1156744836999728, -9.1421294092370822, -6.2399906992151095, -8.1468081354333712, -9.7472958444787814, -8.0387620805932833, -9.0930447458459689, -9.5714697717859103],
+      "y": [-0.45401777992817183, 2.8317711137714743, -0.75728561649891157, 3.4152061723652243, 2.9948832773151755, 3.211413838762319, 3.5971619867267965, 5.5013868593159074],
+      "text": ["RPCAUMAP_1:  -4.1156745<br />RPCAUMAP_2:  -0.45401778<br />celltype: Liver", "RPCAUMAP_1:  -9.1421294<br />RPCAUMAP_2:   2.83177111<br />celltype: Liver", "RPCAUMAP_1:  -6.2399907<br />RPCAUMAP_2:  -0.75728562<br />celltype: Liver", "RPCAUMAP_1:  -8.1468081<br />RPCAUMAP_2:   3.41520617<br />celltype: Liver", "RPCAUMAP_1:  -9.7472958<br />RPCAUMAP_2:   2.99488328<br />celltype: Liver", "RPCAUMAP_1:  -8.0387621<br />RPCAUMAP_2:   3.21141384<br />celltype: Liver", "RPCAUMAP_1:  -9.0930447<br />RPCAUMAP_2:   3.59716199<br />celltype: Liver", "RPCAUMAP_1:  -9.5714698<br />RPCAUMAP_2:   5.50138686<br />celltype: Liver"],
+      "type": "scatter",
+      "mode": "markers",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(221,204,119,1)",
+        "opacity": 0.80000000000000004,
+        "size": 1.8897637795275593,
+        "symbol": "circle",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "rgba(221,204,119,1)"
+        }
+      },
+      "hoveron": "points",
+      "name": "Liver",
+      "legendgroup": "Liver",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    }
+  ],
+  "layout": {
+    "margin": {
+      "t": 42.666666666666671,
+      "r": 7.3059360730593621,
+      "b": 12.785388127853885,
+      "l": 10.958904109589042
+    },
+    "plot_bgcolor": "rgba(255,255,255,1)",
+    "paper_bgcolor": "rgba(255,255,255,1)",
+    "font": {
+      "color": "rgba(0,0,0,1)",
+      "family": "",
+      "size": 14.611872146118724
+    },
+    "title": {
+      "text": "<b> KDM2B <\/b>",
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 17.534246575342465
+      },
+      "x": 0.5,
+      "xref": "paper"
+    },
+    "xaxis": {
+      "domain": [0, 1],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [-11.04601114980715, 9.5013534665868917],
+      "tickmode": "array",
+      "ticktext": ["-10", "-5", "0", "5"],
+      "tickvals": [-10, -5, 0, 5],
+      "categoryorder": "array",
+      "categoryarray": ["-10", "-5", "0", "5"],
+      "nticks": null,
+      "ticks": "",
+      "tickcolor": null,
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0,
+      "showticklabels": false,
+      "tickfont": {
+        "color": null,
+        "family": null,
+        "size": 0
+      },
+      "tickangle": -0,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": {
+        "text": "",
+        "font": {
+          "color": null,
+          "family": null,
+          "size": 0
+        }
+      },
+      "hoverformat": ".2f"
+    },
+    "yaxis": {
+      "domain": [0, 1],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [-15.758051655393565, 6.8956901811542863],
+      "tickmode": "array",
+      "ticktext": ["-15", "-10", "-5", "0", "5"],
+      "tickvals": [-15, -10, -5, 0, 5],
+      "categoryorder": "array",
+      "categoryarray": ["-15", "-10", "-5", "0", "5"],
+      "nticks": null,
+      "ticks": "",
+      "tickcolor": null,
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0,
+      "showticklabels": false,
+      "tickfont": {
+        "color": null,
+        "family": null,
+        "size": 0
+      },
+      "tickangle": -0,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "x",
+      "title": {
+        "text": "",
+        "font": {
+          "color": null,
+          "family": null,
+          "size": 0
+        }
+      },
+      "hoverformat": ".2f"
+    },
+    "shapes": [
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0,
+        "x1": 1,
+        "y0": 0,
+        "y1": 1
+      }
+    ],
+    "showlegend": true,
+    "legend": {
+      "bgcolor": "rgba(255,255,255,1)",
+      "bordercolor": "transparent",
+      "borderwidth": 1.8897637795275593,
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 11.689497716894984
+      },
+      "title": {
+        "text": "",
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.611872146118724
+        }
+      }
+    },
+    "hovermode": "closest",
+    "barmode": "relative"
+  },
+  "config": {
+    "doubleClick": "reset",
+    "modeBarButtonsToAdd": ["hoverclosest", "hovercompare"],
+    "showSendToCloud": false
+  },
+  "source": "A",
+  "attrs": {
+    "55f369f633cc": {
+      "x": {},
+      "y": {},
+      "colour": {},
+      "type": "scatter"
+    }
+  },
+  "cur_data": "55f369f633cc",
+  "visdat": {
+    "55f369f633cc": ["function (y) ", "x"]
+  },
+  "highlight": {
+    "on": "plotly_click",
+    "persistent": false,
+    "dynamic": false,
+    "selectize": false,
+    "opacityDim": 0.20000000000000001,
+    "selected": {
+      "opacity": 1
+    },
+    "debounce": 0
+  },
+  "shinyEvents": ["plotly_hover", "plotly_click", "plotly_selected", "plotly_relayout", "plotly_brushed", "plotly_brushing", "plotly_clickannotation", "plotly_doubleclick", "plotly_deselect", "plotly_afterplot", "plotly_sunburstclick"],
+  "base_url": "https://plot.ly"
+}

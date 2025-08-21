@@ -1,0 +1,343 @@
+---
+title: "Differential Analysis using Pseudobulk"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+---
+
+
+# libraries
+
+```{r load_libraries, warning = FALSE, message = FALSE}
+library(Seurat)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(purrr)
+library(ggplot2)
+library(tibble)
+library(cowplot)  
+library(patchwork)
+library(stringr)
+library(pheatmap)
+library(reshape2)
+library(readxl)
+library(stringr)
+library(DESeq2)
+library(gridExtra)
+library(ggrepel)
+library(ggpubr)
+library(tidyverse)
+library(viridisLite)
+
+theme_set(theme_classic())
+
+
+data_dir = "/home/zli4/MSK_DEC24/Analysis"
+
+out_dir = "/home/zli4/MSK_DEC24/Analysis/outs/differential_expression"
+
+tp = "D11"
+print(tp)
+```
+
+
+
+# load pseudobulk samples
+
+
+```{r}
+f_pseudobulk_list = file.path(out_dir,"pseudobulk_list.RDS")
+pseudo_obj_list  = readRDS(f_pseudobulk_list)
+
+```
+
+
+# remove pseudobulk samples with < 30 cells
+
+```{r}
+min_cells = 30
+
+
+pseudo_obj_list = lapply(pseudo_obj_list,function(pseudo_obj){
+  pseudo_obj%>%subset(subset = n>=min_cells)
+})
+
+```
+
+```{r}
+obj = pseudo_obj_list[[5]]
+dat_mat = GetAssayData(obj)
+n_non_zero = rowSums(dat_mat > 0)
+  dat_mat = dat_mat[n_non_zero >= ncol(dat_mat) * 0.5, ]
+```
+
+# Differential Analysis Conditioned on Cell Type
+
+
+
+```{r}
+geno2test_tp = readRDS( file.path(out_dir,"geno2test_tp.RDS"))
+```
+
+
+```{r}
+geno2test = geno2test_tp[[tp]]
+pseudo_obj = pseudo_obj_list[[tp]]
+```
+
+```{r,message=FALSE,warning=FALSE, fig.width=8, fig.height = 3.3}
+
+res_all = NULL
+
+for(ct in unique(geno2test$celltype)){
+
+  print("==========")
+  print(paste0("working on ", ct))
+  print("==========")
+  geno2use = geno2test%>%filter(celltype==ct)%>%pull(genotype)
+  geno2use = as.character(geno2use)
+  
+  stopifnot(length(geno2use) > 0)
+  
+  dat = pseudo_obj%>%subset(celltype ==ct)%>%subset(genotype%in%(union(geno2use,"WT")))
+  dat_mat = GetAssayData(dat, layer = 'counts')
+  dat_mat <- dat_mat[!grepl("^ENSG", rownames(dat_mat)), ] # remove genes without gene symbols
+  n_non_zero = rowSums(dat_mat > 0)
+  dat_mat = dat_mat[n_non_zero >= ncol(dat_mat) * 0.5, ]
+  
+  meta_df = dat[[]]
+  if(!"WT"%in%unique(meta_df$genotype)){
+    next
+  }
+    
+  meta_df$genotype = factor(meta_df$genotype)
+  meta_df$genotype = relevel(meta_df$genotype, ref="WT")
+  meta_df$log10_rd = log10(colSums(dat_mat))
+  summary(meta_df$log10_rd)
+  
+    
+  if(nrow(meta_df)<=5){# check number of samples
+    next
+  } 
+  
+  # create dds object
+  if(length(unique(meta_df$source))>1){ # pseudobulk samples come from two sources (both external_WT and KO_village)
+    if(all(rowSums(table(meta_df$genotype,meta_df$source)!=0)==1)){ 
+      # when all WT samples come from one data source while KO samples the other
+      next
+    }
+    if(length(unique(meta_df$background))==1){
+      print("===== all pseudobulk samples come from one background ===== ")
+      # all pseudobulk samples come from one background
+        dds = DESeqDataSetFromMatrix(dat_mat, colData=meta_df, 
+                      ~ genotype + log10_rd + source)
+    }else{
+        dds = DESeqDataSetFromMatrix(dat_mat, colData=meta_df, 
+                      ~ genotype + log10_rd + background + source)
+    }
+  }else{  # all pseudobulk samples come from one source
+    print("===== all pseudobulk samples come from one source===== ")
+    if(length(unique(meta_df$background))==1){
+      print("===== all pseudobulk samples come from one background ===== ")
+      dds = DESeqDataSetFromMatrix(dat_mat, colData=meta_df, 
+                              ~ genotype + log10_rd )
+    }else{
+      dds = DESeqDataSetFromMatrix(dat_mat, colData=meta_df, 
+                              ~ genotype + log10_rd + background)
+    }
+  }
+
+  vsd = vst(dds, blind=FALSE)
+  
+  # run PCA
+  pcs = plotPCA(vsd, intgroup = c("genotype", "background", "source"), returnData = TRUE)
+  genotypes2plot = setdiff(pcs$genotype, "WT")
+  
+  # PCA plot: color by genotype, shape by cell background
+  plot_lists = list()
+  for (geno1 in genotypes2plot) {
+    pcs$highlight <- ifelse(
+      pcs$genotype == "WT", "WT",
+      ifelse(pcs$genotype == geno1, "KO", "Other")
+    )
+    p1 = ggplot(pcs, aes(x = PC1, y = PC2, color = highlight, 
+                              alpha = highlight, shape = background)) +
+      geom_point(size = 2) +
+      scale_color_manual(values = c("WT" = "blue", "KO" = "red", 
+                                    "Other" = "grey")) +
+      scale_alpha_manual(values = c("WT" = 1, "KO" = 1, "Other" = 0.5)) +
+      labs(title = paste(ct, geno1))  + 
+      guides(
+        color = "none", 
+        alpha = "none",
+        shape = guide_legend(title = "") 
+      ) 
+    plot_lists[[geno1]] = p1
+  }
+  i = 1
+  while (i <= length(plot_lists)) {
+    if (i < length(plot_lists)) {
+      grid.arrange(plot_lists[[i]], plot_lists[[i + 1]], ncol = 2)
+    } else {
+      grid.arrange(plot_lists[[i]], ncol = 2)
+    }
+    i <- i + 2
+    Sys.sleep(1) 
+  }
+  
+  # PCA plot: color by genotype, shape by source
+  plot_lists = list()
+  for (geno1 in genotypes2plot) {
+    pcs$highlight <- ifelse(
+      pcs$genotype == "WT", "WT",
+      ifelse(pcs$genotype == geno1, "KO", "Other")
+    )
+    p1 = ggplot(pcs, aes(x = PC1, y = PC2, color = highlight, 
+                              alpha = highlight, shape = source)) +
+      geom_point(size = 2) +
+      scale_color_manual(values = c("WT" = "blue", "KO" = "red", 
+                                    "Other" = "grey")) +
+      scale_alpha_manual(values = c("WT" = 1, "KO" = 1, "Other" = 0.5)) +
+      labs(title = paste(ct, geno1))  + 
+      guides(
+        color = "none", 
+        alpha = "none",
+        shape = guide_legend(title = "") 
+      ) 
+    plot_lists[[geno1]] = p1
+  }
+  i = 1
+  while (i <= length(plot_lists)) {
+    if (i < length(plot_lists)) {
+      grid.arrange(plot_lists[[i]], plot_lists[[i + 1]], ncol = 2)
+    } else {
+      grid.arrange(plot_lists[[i]], ncol = 2)
+    }
+    i <- i + 2
+    Sys.sleep(1) 
+  }
+  
+  dds = DESeq(dds)
+  
+  # check cell background effect
+  if(length(unique(meta_df$background))>1){
+      res_k = results(dds, contrast = c("background", "HUES8", "H1"))
+      res_k = as.data.frame(res_k)
+      g1 = ggplot(res_k, aes(x=pvalue)) + 
+        geom_histogram(color="darkblue", fill="lightblue", 
+                        breaks = seq(0,1,by=0.01)) + 
+        ggtitle("genetic background") + 
+        guides(fill=guide_legend(ncol=2))
+      w_de = which(res_k$padj < 0.05)
+      res_k$delabel = NA
+      res_k$delabel[w_de] = rownames(res_k)[w_de]
+      res_k$diffexpressed = "No"
+      res_k$diffexpressed[res_k$log2FoldChange > 0 & res_k$padj < 0.05] <- "Up"
+      res_k$diffexpressed[res_k$log2FoldChange < 0 & res_k$padj < 0.05] <- "Down"
+      res_k$log2FoldChange[which(res_k$log2FoldChange > 3)] = 3
+      res_k$log2FoldChange[which(res_k$log2FoldChange < -3)] = -3
+      col2use = c("blue", "grey", "red")
+      names(col2use) = c("Down", "No", "Up")
+      g2 = ggplot(res_k, aes(x=log2FoldChange, y=-log10(padj), 
+                      col=diffexpressed, label=delabel)) + 
+        geom_point() + 
+        geom_text_repel(show.legend = FALSE) + 
+        scale_color_manual(values=col2use)
+      print(ggarrange(g1, g2, widths = c(2,3)))
+      saveRDS(res_k, 
+          file=file.path(out_dir, paste0(ct,"_DE_pseudobulk_background_effect.RDS",sep = "")))
+  }
+  
+  if(length(unique(meta_df$source))>1){
+    # check data source effect
+    res_k = results(dds, contrast = c("source",  "external_WT", "KO_village" ))
+    res_k = as.data.frame(res_k)
+    g1 = ggplot(res_k, aes(x=pvalue)) + 
+      geom_histogram(color="darkblue", fill="lightblue", 
+                      breaks = seq(0,1,by=0.01)) + 
+      ggtitle("data source") + 
+      guides(fill=guide_legend(ncol=2))
+    w_de = which(res_k$padj < 0.05)
+    res_k$delabel = NA
+    res_k$delabel[w_de] = rownames(res_k)[w_de]
+    res_k$diffexpressed = "No"
+    res_k$diffexpressed[res_k$log2FoldChange > 0 & res_k$padj < 0.05] <- "Up"
+    res_k$diffexpressed[res_k$log2FoldChange < 0 & res_k$padj < 0.05] <- "Down"
+    res_k$log2FoldChange[which(res_k$log2FoldChange > 3)] = 3
+    res_k$log2FoldChange[which(res_k$log2FoldChange < -3)] = -3
+    col2use = c("blue", "grey", "red")
+    names(col2use) = c("Down", "No", "Up")
+    g2 = ggplot(res_k, aes(x=log2FoldChange, y=-log10(padj), 
+                    col=diffexpressed, label=delabel)) + 
+      geom_point() + 
+      geom_text_repel(show.legend = FALSE) + 
+      scale_color_manual(values=col2use)
+    print(ggarrange(g1, g2, widths = c(2,3)))
+    saveRDS(res_k, 
+        file=file.path(out_dir, paste0(ct,"_DE_pseudobulk_source_effect.RDS",sep = "")))
+  }
+  # KO vs WT DE analysis conditioned on the given cell type
+  for(k in 1:length(geno2use)){
+    nm_k = paste(ct, geno2use[k])
+    res_k = results(dds, contrast = c("genotype", geno2use[k], "WT"))
+    res_k = as.data.frame(res_k)
+    table(is.na(res_k$pvalue))
+  
+    g1 = ggplot(res_k, aes(x=pvalue)) + 
+      geom_histogram(color="darkblue", fill="lightblue", 
+                      breaks = seq(0,1,by=0.01)) + 
+      ggtitle(nm_k) + 
+      guides(fill=guide_legend(ncol=2))
+    
+    w_de = which(res_k$padj < 0.05)
+    res_k$delabel = NA
+    res_k$delabel[w_de] = rownames(res_k)[w_de]
+    res_k$diffexpressed = "No"
+    res_k$diffexpressed[res_k$log2FoldChange > 0 & res_k$padj < 0.05] <- "Up"
+    res_k$diffexpressed[res_k$log2FoldChange < 0 & res_k$padj < 0.05] <- "Down"
+    res_k$log2FoldChange[which(res_k$log2FoldChange > 3)] = 3
+    res_k$log2FoldChange[which(res_k$log2FoldChange < -3)] = -3
+  
+    col2use = c("blue", "grey", "red")
+    names(col2use) = c("Down", "No", "Up")
+    
+    g2 = ggplot(res_k, aes(x=log2FoldChange, y=-log10(padj), 
+                    col=diffexpressed, label=delabel)) + 
+      geom_point() + 
+      geom_text_repel(show.legend = FALSE) + 
+      scale_color_manual(values=col2use) + 
+      ggtitle(nm_k)
+    
+    print(ggarrange(g1, g2, widths = c(2,3)))
+    
+    res_k$celltype = ct
+    res_k$genotype = geno2use[k]
+    res_k$gene = rownames(res_k)
+    rownames(res_k) = NULL
+    
+    res_all = rbind(res_all, res_k)
+  }
+}
+  
+saveRDS(res_all, 
+        file=file.path(out_dir,paste0( "DE_pseudobulk_",tp,".RDS")))
+```
+
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```

@@ -1,0 +1,436 @@
+---
+title: "Portal Figures"
+author: "Zhaoheng Li"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+params:
+  KO2plot: None
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r,warning=F,message=FALSE}
+library(readxl)
+library(stringr)
+library(data.table)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(Seurat)
+library(ggpubr)
+library(gridExtra)
+library(grid)
+library(UpSetR)
+library(tidyr)
+library(viridis)
+library(RColorBrewer)
+library(ggpointdensity)
+library(DESeq2)
+library(goseq)
+library(fgsea)
+library(cowplot)
+library(patchwork)
+library(forcats) 
+library(plotly)
+theme_set(theme_classic())
+
+data_dir = "/home/zli4/MSK_DEC24/Analysis"
+fig_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/genotype_plots"
+```
+
+```{r}
+print(KO2plot)
+```
+
+
+# load data
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+integrated = integrated%>%subset(subset = time_point%in%c("D-1","D3","D7","D11","D18"))
+
+# remove cells without cell type annotations
+keep.cells= rownames(integrated@meta.data)[
+  !is.na(integrated@meta.data$celltype)
+]
+integrated = subset(
+  integrated,
+  cells = keep.cells
+)
+integrated$celltype = as.factor(integrated$celltype)
+summary(integrated$celltype)
+
+integrated
+```
+
+```{r}
+celltype_orders = c(
+  "ESC",
+  "ESC_DE",
+  "DE",
+  "PFG",
+  "PGT",
+  "PP",
+  "EnP",
+  "SC-EC",
+  "SC-alpha",
+  "SC-beta",
+  "SC-delta",
+  "Ductal",
+  "Mesenchymal_Stromal",
+  "Stromal",
+  "Endothelial",
+  "Liver"
+)
+
+integrated$celltype = factor(integrated$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+celltype_palette = readRDS("/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/celltype_palette.RDS")
+
+```
+
+
+
+
+```{r}
+geno_dir = file.path(fig_dir,KO2plot)
+
+combined = integrated%>%subset(subset = genotype %in% c(KO2plot,"WT"))
+```
+
+
+# RPCA-UMAP colored by cell types
+
+```{r, fig.width = 10, fig.height = 8, warning=FALSE,message=FALSE}
+
+
+umap_coords = Embeddings(combined, "rpca.umap") %>% 
+  as.data.frame() %>%
+  tibble::rownames_to_column(var = "cell")
+
+meta_df = combined@meta.data %>%
+  tibble::rownames_to_column(var = "cell")
+
+umap_df = umap_coords %>%
+  left_join(meta_df, by = "cell")
+
+
+umap_df$celltype = factor(umap_df$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+
+umap_wt = umap_df %>% filter(genotype == "WT")
+umap_ko = umap_df %>% filter(genotype == KO2plot)
+
+
+# WT UMAP
+p_wt = ggplot(umap_wt, aes(x = RPCAUMAP_1, y = RPCAUMAP_2, color = celltype)) +
+  geom_point(size = 0.5, alpha = 0.8) +
+  ggtitle("WT") +
+  scale_color_manual(
+      values = celltype_palette,   
+      drop   = TRUE                
+    )+
+  theme_classic() +
+  labs(color = '')+
+  theme(
+    plot.title       = element_text(hjust = 0.5, face = "bold"),
+    axis.title       = element_blank(),
+    axis.text        = element_blank(),
+    axis.ticks       = element_blank()
+  )+
+  guides(
+    color = guide_legend(
+      override.aes = list(size = 2)  # Increase legend point size
+    )
+  )
+
+# KO2plot UMAP
+p_ko = ggplot(umap_ko, aes(x = RPCAUMAP_1, y = RPCAUMAP_2, color = celltype)) +
+  geom_point(size = 0.5, alpha = 0.8) +
+  ggtitle(paste0(KO2plot)) +
+  scale_color_manual(
+    values = celltype_palette,   
+    drop   = TRUE                
+  )+
+  labs(color = '')+
+  theme_classic() +
+  theme(
+    plot.title       = element_text(hjust = 0.5, face = "bold"),
+    axis.title       = element_blank(),
+    axis.text        = element_blank(),
+    axis.ticks       = element_blank()
+  ) +
+  guides(
+    color = guide_legend(
+      override.aes = list(size = 2)  # Increase legend point size
+    )
+  )
+
+
+
+umap_fig = (p_wt + p_ko) +
+  plot_layout(nrow = 1, guides = "collect") &     
+  theme(legend.position = "bottom") &                
+  guides(color = guide_legend(nrow = 4, byrow = TRUE))
+
+print(umap_fig)
+
+ggsave(file.path(geno_dir,paste0(KO2plot,"_umap.png",sep='')),umap_fig,width = 10,height = 8)
+
+# Convert to plotly object
+umap_plotly = ggplotly(umap_fig)
+# Export to JSON
+json = plotly_json(umap_plotly , jsonedit = FALSE)
+write(json, file = file.path(geno_dir,paste0(KO2plot,"_umap.json",sep='')))
+
+```
+
+
+# cell type proportion across time points
+
+```{r,fig.width=10}
+
+prop_df = combined[[]] %>%
+    group_by(time_point, genotype, celltype) %>%
+    summarise(n_cells = n(), .groups = "drop") %>%
+    group_by(time_point, genotype) %>%
+    mutate(proportion = n_cells / sum(n_cells)) %>%
+    ungroup()
+
+prop_df = prop_df %>%
+  mutate(
+    time_point = factor(time_point, levels = c("D-1","D3","D7","D11","D18")),
+    genotype  = factor(genotype, levels = c("WT", KO2plot))
+  )
+
+
+prop_fig = ggplot(prop_df, aes(x = genotype, y = proportion, fill = celltype)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~ time_point, nrow = 1, scales = "free_x") +
+  theme_classic() +
+  labs(
+    x    = "",
+    y    = "",
+    fill = ""
+  ) +
+  scale_fill_manual(
+      values = celltype_palette,   
+      drop   = TRUE                
+    )+
+  guides(fill = guide_legend(nrow = 3)) +
+  theme(
+    legend.position   = "bottom",
+    legend.justification = "center",
+    axis.text.x       = element_text(angle = 45, hjust = 1),
+    strip.background  = element_rect(fill = "gray95", color = NA),
+    strip.text        = element_text(face = "bold")
+  )
+
+print(prop_fig)
+ggsave(file.path(geno_dir,paste0(KO2plot,"_ct-prop.png",sep='')),prop_fig,width = 8,height = 6)
+
+# Convert to plotly object
+prop_plotly = ggplotly(prop_fig)
+# Export to JSON
+json = plotly_json(prop_plotly , jsonedit = FALSE)
+write(json, file = file.path(geno_dir,paste0(KO2plot,"_ct-prop.json",sep='')))
+
+```
+
+
+
+
+# Differential Expression Results
+
+```{r,warning=FALSE,message=FALSE}
+
+de_res_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/differential_expression"
+if(file.exists(file.path(de_res_dir, paste0("genotype_DEGs/", gsub("/","_",KO2plot), ".tsv")))){
+  de_res = readr::read_tsv(file.path(de_res_dir, paste0("genotype_DEGs/", gsub("/","_",KO2plot), ".tsv")))
+  de_res$celltype = factor(de_res$celltype,
+                                levels =celltype_orders ,
+                                ordered = TRUE)
+}else{
+  de_res = NULL
+}
+
+```
+
+
+## nDEGs
+
+```{r}
+
+if(file.exists(file.path(de_res_dir, paste0("genotype_DEGs/", gsub("/","_",KO2plot), ".tsv")))){
+  # Filter de_res for KO2plot vs WT and keep only significant DEGs (padj < 0.05)
+  deg_filtered = de_res %>%
+    filter(
+      genotype == KO2plot,    # keep only rows where this is the KO2plot vs WT comparison
+      !is.na(padj),           # just in case there are NA padj???s
+      padj < 0.05             # only significant DEGs
+    ) %>%
+    mutate(direction = ifelse(log2FoldChange > 0, "Up", "Down"))
+  
+  if(nrow(deg_filtered)>0){
+    # count total DEGs per cell type, and also by direction
+    deg_summary = deg_filtered %>%
+      group_by(celltype, direction) %>%
+      summarise(n_DEGs = n(), .groups = "drop") %>%
+      # We also want a total per cell type (for a separate plot)
+      bind_rows(
+        deg_filtered %>%
+          group_by(celltype) %>%
+          summarise(n_DEGs = n(), .groups = "drop") %>%
+          mutate(direction = "Total")
+      ) %>%
+      mutate(
+        direction = factor(direction, levels = c("Total", "Up", "Down"))
+      )
+    
+    
+    # Barplot # of total DEGs per cell type
+    p_total = deg_summary %>%
+      filter(direction == "Total") %>%
+      ggplot(aes(x = celltype, y = n_DEGs)) +
+      geom_col(fill = "steelblue") +
+      theme_bw() +
+      labs(
+        title = paste0(KO2plot, " vs WT"),
+        x     = "",
+        y     = "Number of DEGs",
+      ) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title  = element_text(hjust = 0.5, face = "bold")
+      )
+    
+    
+    # upregulated and downregulated DEGs
+    p_updown = deg_summary %>%
+      filter(direction %in% c("Up", "Down")) %>%
+      ggplot(aes(x = celltype, y = n_DEGs, fill = direction)) +
+      geom_col(position = position_dodge(width = 0.8)) +
+      scale_fill_manual(
+        values = c("Up" = "#D73027", "Down" = "#4575B4"),
+        name   = "Regulation"
+      ) +
+      theme_bw() +
+      labs(
+        title = paste0(KO2plot, " vs WT"),
+        x     = "",
+        y     = "Number of DEGs",
+        fill = ''
+      ) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title  = element_text(hjust = 0.5, face = "bold")
+      )
+    
+    print(p_total)
+    print(p_updown)
+    
+    ggsave(file.path(geno_dir,paste0(KO2plot,"_nDEG-total.png",sep='')),p_total,width = 6,height = 4)
+    ggsave(file.path(geno_dir,paste0(KO2plot,"_nDEG-updown.png",sep='')),p_updown,width = 6,height = 4)
+    
+    de_total_plotly = ggplotly(p_total)
+    json = plotly_json(de_total_plotly , jsonedit = FALSE)
+    write(json, file =  file.path(geno_dir,paste0(KO2plot,"_nDEG-total.json",sep='')))
+    
+    de_updown_plotly = ggplotly(p_updown)
+    json = plotly_json(de_updown_plotly , jsonedit = FALSE)
+    write(json, file = file.path(geno_dir,paste0(KO2plot,"_nDEG-updown.json",sep='')))
+  }
+}
+
+
+```
+
+
+## DEG dotplot
+
+```{r,fig.height=8,fig.width=6}
+de_top_n = 3
+if(file.exists(file.path(de_res_dir, paste0("genotype_DEGs/", gsub("/","_",KO2plot), ".tsv")))){
+  deg_df = de_res %>% 
+    filter(genotype == KO2plot,              
+           padj < 0.05)                    
+  
+  if(nrow(deg_df)>0){
+      # For each celltype, pick top 3 up & top 3 down
+    top_deg = deg_df %>% 
+      group_by(celltype) %>% 
+      arrange(desc(log2FoldChange), .by_group = TRUE) %>% 
+      slice_head(n = de_top_n) %>%                     # top 3 upregulated
+      bind_rows(
+        deg_df %>% 
+          group_by(celltype) %>% 
+          arrange(log2FoldChange, .by_group = TRUE) %>% 
+          slice_head(n = de_top_n)                     # top 3 downregulated
+      ) %>% 
+      ungroup() %>% 
+      # For plotting convenience, order genes by effect size within each celltype
+      mutate(
+        gene     = fct_reorder(gene, log2FoldChange),
+        celltype = as.factor(celltype),
+        negLog10 = -log10(padj)                 # size aesthetic
+      )
+    
+    # dotplot
+    de_dot = ggplot(top_deg, aes(x = celltype, y = gene)) +
+      geom_point(aes(size = negLog10, colour = log2FoldChange)) +
+      scale_colour_gradient2(
+        low  = "#4575B4", mid = "white", high = "#D73027",
+        midpoint = 0, name = "log2FC"
+      ) +
+      scale_size_continuous(
+        range = c(2, 8), name = expression(-log[10]~italic(p)[adj])
+      ) +
+      theme_bw() +
+      labs(
+        x = "",
+        y = "",
+        title = paste(KO2plot, "vs WT")
+      ) +
+      theme(
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        plot.title  = element_text(hjust = 0.5, face = "bold")
+      )
+    
+    print(de_dot)
+    ggsave(file.path(geno_dir,paste0(KO2plot,"_DE-dotplot.png",sep='')),de_dot,width = 6,height = 8)
+    
+    # Convert to plotly object
+    de_dot_plotly = ggplotly(de_dot)
+    # Export to JSON
+    json = plotly_json(de_dot_plotly , jsonedit = FALSE)
+    write(json, file =file.path(geno_dir,paste0(KO2plot,"_DE-dotplot.json",sep='')))
+  }
+}
+
+```
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```
