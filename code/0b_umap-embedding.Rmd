@@ -1,0 +1,111 @@
+---
+title: "Collect UMAP Embeddings"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r,warning=F,message=FALSE}
+library(readxl)
+library(stringr)
+library(data.table)
+library(ggplot2)
+library(ggrepel)
+library(dplyr)
+library(Seurat)
+
+
+data_dir = "/home/zli4/MSK_DEC24/Analysis"
+out_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs"
+```
+
+
+
+# load data
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+integrated = integrated%>%subset(subset = time_point%in%c("D-1","D3","D7","D11","D18"))
+
+# remove cells without cell type annotations
+keep.cells= rownames(integrated@meta.data)[
+  !is.na(integrated@meta.data$celltype)
+]
+integrated = subset(
+  integrated,
+  cells = keep.cells
+)
+integrated$celltype = as.factor(integrated$celltype)
+summary(integrated$celltype)
+
+integrated
+```
+
+```{r}
+celltype_orders = c(
+  "ESC",
+  "ESC_DE",
+  "DE",
+  "PFG",
+  "PGT",
+  "PP",
+  "EnP",
+  "SC-EC",
+  "SC-alpha",
+  "SC-beta",
+  "SC-delta",
+  "Ductal",
+  "Mesenchymal_Stromal",
+  "Stromal",
+  "Endothelial",
+  "Liver"
+)
+
+integrated$celltype = factor(integrated$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+```
+
+
+
+
+```{r}
+
+umap_coords = Embeddings(integrated, "rpca.umap") %>% 
+  as.data.frame() %>%
+  tibble::rownames_to_column(var = "cell")
+meta_df = integrated@meta.data %>%
+  tibble::rownames_to_column(var = "cell")
+
+umap_df = umap_coords %>%
+  left_join(meta_df, by = "cell")
+
+head(umap_df)
+write.csv(umap_df,file.path(out_dir,"metadata.csv"))
+
+```
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```

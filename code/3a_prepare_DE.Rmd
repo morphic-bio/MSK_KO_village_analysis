@@ -1,0 +1,431 @@
+---
+title: "Prepare Pseudobulks for Differential Expression Analysis"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+params:
+  tp: None
+---
+
+
+# libraries
+
+```{r load_libraries, warning = FALSE, message = FALSE}
+library(Seurat)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+library(cowplot)  
+library(patchwork)
+library(stringr)
+library(pheatmap)
+library(reshape2)
+library(readxl)
+library(stringr)
+library(DESeq2)
+library(gridExtra)
+library(ggrepel)
+library(ggpubr)
+library(tidyverse)
+library(viridisLite)
+library(purrr)
+theme_set(theme_classic())
+
+
+data_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis"
+
+out_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/differential_expression"
+
+
+```
+
+
+
+
+# load data
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+```
+
+```{r}
+
+
+# remove cells without cell type annotations
+keep.cells= rownames(integrated@meta.data)[
+  !is.na(integrated@meta.data$celltype)
+]
+
+integrated= subset(
+  integrated,
+  cells = keep.cells
+)
+integrated$celltype = as.factor(integrated$celltype)
+summary(integrated$celltype)
+```
+
+
+```{r}
+summary(as.factor(integrated$genotype))
+```
+
+
+## order cell types
+
+```{r}
+celltype_orders = c(
+  "ESC",
+  "ESC_DE",
+  "DE",
+  "PFG",
+  "PGT",
+  "PP",
+  "EnP",
+  "SC-EC",
+  "SC-alpha",
+  "SC-beta",
+  "SC-delta",
+  "Ductal",
+  "Mesenchymal_Stromal",
+  "Stromal",
+  "Endothelial",
+  "Liver"
+)
+
+integrated$celltype = factor(integrated$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+celltype_palette = hcl.colors(length(celltype_orders), "Spectral")
+
+```
+
+
+# split seurat object by time points
+
+
+```{r}
+obj = integrated%>%subset(subset = time_point%in%c("D-1","D3","D7","D11","D18"))
+
+obj$time_point = droplevels(obj$time_point)
+summary(obj$time_point)
+
+obj_list = SplitObject(obj, split.by = "time_point")
+obj_list
+```
+
+# create pseudobulk samples
+
+
+```{r }
+f_pseudobulk_list = file.path(out_dir,"pseudobulk_list.RDS")
+
+if(file.exists(f_pseudobulk_list)){
+  pseudo_obj_list  = readRDS(f_pseudobulk_list)
+}else{
+  pseudo_obj_list = list()
+  for(tp in c("D-1","D3","D7","D11", "D18")){
+    obj = obj_list[[tp]]
+  
+    obj$celltype = as.factor(obj$celltype)
+    obj$background = as.factor(obj$background)
+    obj$genotype = as.factor(obj$genotype)
+    levels(obj$celltype)=gsub("_","-",levels(obj$celltype)) # rename celltype levels
+    pseudo_obj = AggregateExpression(obj, assays = "RNA", return.seurat = T,
+                                      group.by = c("sample_name","feature.4", "celltype"))
+    
+    pseudo_obj$sample_name = gsub("-","_",pseudo_obj$sample_name)
+    
+    # process metadata
+    pseudo_meta = pseudo_obj[[]]
+    pseudo_meta$pseudo.sample.id = pseudo_meta$orig.ident
+    obj$pseudo.sample.id = as.factor(paste(obj$sample_name,obj$feature.4,obj$celltype,sep='_'))
+    obj$pseudo.sample.id = gsub("-","_", obj$pseudo.sample.id)
+    pseudo_meta$pseudo.sample.id = gsub("-","_",rownames(pseudo_meta))
+    pseudo_meta = pseudo_meta %>%
+                            left_join(obj[[]]%>%select(pseudo.sample.id,genotype,source,background)%>%distinct(), 
+                                           by = c("pseudo.sample.id"))
+    pseudo_meta$celltype = as.factor(pseudo_meta$celltype)
+    pseudo_meta$genotype = as.factor(pseudo_meta$genotype)
+  
+    n_df=obj[[]]%>%dplyr::count(pseudo.sample.id) 
+    pseudo_meta = pseudo_meta%>%left_join(n_df)
+    rownames(pseudo_meta) = pseudo_meta$orig.ident
+    pseudo_obj@meta.data = pseudo_meta
+    
+    pseudo_obj$celltype = as.character( pseudo_obj$celltype)
+    pseudo_obj$celltype = ifelse(pseudo_obj$celltype == 'ESC-DE','ESC_DE',
+                                 ifelse(pseudo_obj$celltype == 'Mesenchymal-Stromal','Mesenchymal_Stromal',pseudo_obj$celltype ))
+    pseudo_obj$celltype = as.factor(pseudo_obj$celltype)
+    pseudo_obj$genotype = as.factor(pseudo_obj$genotype)
+    pseudo_obj_list[[tp]] = pseudo_obj
+  }
+  names(pseudo_obj_list) = c("D-1","D3","D7","D11", "D18")
+  saveRDS(pseudo_obj_list,f_pseudobulk_list)
+}
+
+
+```
+
+# remove pseudobulk samples with < 30 cells
+
+```{r}
+min_cells = 30
+
+
+pseudo_obj_list = lapply(pseudo_obj_list,function(pseudo_obj){
+  pseudo_obj%>%subset(subset = n>=min_cells)
+})
+
+```
+
+
+
+# prepared genotypes to be tested for each cell type
+
+>  a KO genotype will not be tested if it contains <2 pseudobulk samples
+
+```{r}
+
+min_pseudiobulk_sample = 2
+geno2test_tp = list()
+
+min_pseudiobulk_sample_filtering = list()
+for(tp in c("D-1","D3","D7","D11","D18")){
+  
+  
+  pseudo_obj = pseudo_obj_list[[tp]]
+  meta = pseudo_obj@meta.data
+
+  # count unique feature.4 by celltype & genotype
+  n_sgrna = meta %>%
+    group_by(celltype, genotype) %>%
+    summarise(n_unique_feat4 = n_distinct(feature.4), .groups = "drop") 
+    
+  n_sgrna_wide = n_sgrna  %>%
+    pivot_wider(
+      names_from  = genotype,
+      values_from = n_unique_feat4,
+      values_fill = 0
+    )
+  n_sgrna_wide = as.data.frame(n_sgrna_wide )
+  rownames(n_sgrna_wide ) = n_sgrna_wide$celltype
+  
+  geno2test = n_sgrna%>%filter(n_unique_feat4>=min_pseudiobulk_sample)%>%filter(genotype!="WT")
+  geno2test$tp = tp
+  
+  geno2test_tp[[tp]] = geno2test
+  min_pseudiobulk_sample_filtering_tp = n_sgrna%>%
+    filter(n_unique_feat4<min_pseudiobulk_sample)%>%
+    filter(genotype!="WT")
+  min_pseudiobulk_sample_filtering_tp$tp = tp
+  min_pseudiobulk_sample_filtering[[tp]] = min_pseudiobulk_sample_filtering_tp
+}
+min_pseudiobulk_sample_filtering = Reduce(rbind,min_pseudiobulk_sample_filtering)
+write.table(
+  min_pseudiobulk_sample_filtering,
+  file      = file.path(out_dir, "geno_filtering/(min_pseudiobulk_sample_filtering.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+```
+
+
+
+>  DE analysis will not be performed in cell types that do not contain "WT"
+
+
+```{r}
+
+
+no_WT_filtering = imap_dfr(pseudo_obj_list, function(pseudo_obj, tp) {
+  pseudo_obj@meta.data %>%
+    group_by(celltype) %>%
+    # keep only those celltypes where NO genotype contains "WT"
+    filter(!any(grepl("WT", genotype))) %>%
+    # collect each unique genotype into its own row
+    summarise(genotype = unique(genotype), .groups = "drop") %>%
+    # add the timepoint column
+    mutate(tp = tp) %>%
+    select(tp, celltype, genotype)
+})
+no_WT_filtering
+write.table(
+  no_WT_filtering,
+  file      = file.path(out_dir, "geno_filtering/no_WT_filtering.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+```
+
+
+```{r}
+geno2test_tp = imap(geno2test_tp, function(df, tp) {
+  rm = no_WT_filtering %>% 
+    filter(tp == !!tp) %>% 
+    select(celltype, genotype)
+  df %>% 
+    anti_join(rm, by = c("celltype", "genotype"))
+})
+geno2test_tp 
+```
+
+>  DE analysis will not be performed in cell types with <5 pseudobuk samples
+
+```{r}
+
+
+tol_pseudosample_filtering = imap_dfr(pseudo_obj_list, function(pseudo_obj, tp) {
+  meta = pseudo_obj@meta.data
+  
+  small_cts = meta %>% 
+  group_by(celltype) %>%
+  summarise(n = n(), .groups = "drop") %>%
+  filter(n <= 5) %>%
+  pull(celltype)
+  
+  # return an empty tibble if none
+  if (length(small_cts) == 0) {
+    return(tibble(
+      tp       = character(),
+      celltype = character(),
+      genotype = character()
+    ))
+  }
+  
+  # otherwise pull out every unique genotype
+  meta %>%
+    filter(celltype %in% small_cts) %>%
+    distinct(celltype, genotype) %>%
+    mutate(tp = tp) %>%        # tack on the timepoint
+    select(tp, celltype, genotype)
+})
+
+
+tol_pseudosample_filtering
+write.table(
+  tol_pseudosample_filtering,
+  file      = file.path(out_dir, "geno_filtering/tol_pseudosample_filtering.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+```
+
+
+```{r}
+geno2test_tp = imap(geno2test_tp, function(df, tp) {
+  rm = tol_pseudosample_filtering%>% 
+    filter(tp == !!tp) %>% 
+    select(celltype, genotype)
+  df %>% 
+    anti_join(rm, by = c("celltype", "genotype"))
+})
+geno2test_tp 
+```
+
+>  within a cell type, DE analysis will not be performed for genotypes whose KO samples are all from one data source while WT samples from the other 
+
+```{r}
+
+source_filtering= imap_dfr(pseudo_obj_list, function(obj, tp) {
+  meta = obj@meta.data
+  
+  # 1) For each celltype, count distinct sources & build the genotype×source table
+  ct_info = meta %>%
+    group_by(celltype) %>%
+    summarise(
+      n_sources = n_distinct(source),
+      tbl       = list(table(genotype, source)),
+      .groups   = "drop"
+    )
+  
+  # 2) Keep celltypes that either
+  #    - have ≤1 source (no need to test), OR
+  #    - have >1 source AND satisfy the "one‐per‐source" rule
+  good_cts = ct_info %>%
+    filter(
+      (n_sources > 1 & map_lgl(tbl, ~ all(rowSums(.x != 0) == 1)))
+    ) %>%
+    pull(celltype)
+  
+  # 3) If none qualify, return an empty tibble
+  if (length(good_cts) == 0) {
+    return(tibble(tp       = character(),
+                  celltype = character(),
+                  genotype = character()))
+  }
+  
+  # 4) Otherwise, pull all genotypes for those good celltypes
+  meta %>%
+    filter(celltype %in% good_cts) %>%
+    distinct(celltype, genotype) %>%
+    mutate(tp = tp) %>%
+    select(tp, celltype, genotype)
+})
+
+
+
+rownames(source_filtering) = NULL
+source_filtering
+if(nrow(source_filtering)>0){
+  write.table(
+  source_filtering,
+  file      = file.path(out_dir, "geno_filtering/source_filtering.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+}
+
+```
+
+```{r}
+geno2test_tp = imap(geno2test_tp, function(df, tp) {
+  rm = source_filtering%>% 
+    filter(tp == !!tp) %>% 
+    select(celltype, genotype)
+  df %>% 
+    anti_join(rm, by = c("celltype", "genotype"))
+})
+geno2test_tp 
+```
+
+## number of genotypes to be tested in each cell type at each time point
+
+```{r}
+geno2test_tp[["D18"]] 
+```
+
+```{r}
+for(tp in c("D3","D7","D11","D18")){
+  geno2test = geno2test_tp[[tp]] 
+  print(geno2test%>%group_by(celltype)%>%summarize(n_distinct(genotype)))
+  
+}
+```
+```{r}
+saveRDS(geno2test_tp,file.path(out_dir,"geno2test_tp.RDS"))
+```
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```
+

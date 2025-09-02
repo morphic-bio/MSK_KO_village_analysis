@@ -1,0 +1,2150 @@
+{
+  "data": [
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.99928520371694085,
+      "x": [2],
+      "y": [0.00071479628305937126],
+      "text": "genotype: WT<br />proportion: 7.147963e-04<br />celltype: DE",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.99730240086323196,
+      "x": [2],
+      "y": [0.0026975991367682584],
+      "text": "genotype: WT<br />proportion: 2.697599e-03<br />celltype: DE",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.99595141700404821, 0.99745284735278072],
+      "x": [1, 2],
+      "y": [0.0040485829959514552, 0.0025471526472194972],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.048583e-03<br />celltype: DE", "genotype: WT<br />proportion: 2.547153e-03<br />celltype: DE"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.058823529411764594, 0.074423480083857366],
+      "x": [1, 2],
+      "y": [0.94117647058823495, 0.92557651991614309],
+      "text": ["genotype: TET1/2/3<br />proportion: 9.411765e-01<br />celltype: DE", "genotype: WT<br />proportion: 9.255765e-01<br />celltype: DE"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.94444444444444431, 0.99294302143230473],
+      "x": [1, 2],
+      "y": [0.05555555555555558, 0.0070569785676947161],
+      "text": ["genotype: TET1/2/3<br />proportion: 5.555556e-02<br />celltype: DE", "genotype: WT<br />proportion: 7.056979e-03<br />celltype: DE"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(34,136,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "DE",
+      "legendgroup": "DE",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.9982130092923519,
+      "x": [2],
+      "y": [0.0010721944245889459],
+      "text": "genotype: WT<br />proportion: 1.072194e-03<br />celltype: Ductal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.97590361445783103, 0.9900188831939577],
+      "x": [1, 2],
+      "y": [0.024096385542168752, 0.0072835176692742643],
+      "text": ["genotype: TET1/2/3<br />proportion: 2.409639e-02<br />celltype: Ductal", "genotype: WT<br />proportion: 7.283518e-03<br />celltype: Ductal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.55060728744939225, 0.7470434835344778],
+      "x": [1, 2],
+      "y": [0.44534412955465597, 0.25040936381830292],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.453441e-01<br />celltype: Ductal", "genotype: WT<br />proportion: 2.504094e-01<br />celltype: Ductal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.074074074074073987,
+      "x": [2],
+      "y": [0.00034940600978337899],
+      "text": "genotype: WT<br />proportion: 3.494060e-04<br />celltype: Ductal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.99189754312597955,
+      "x": [2],
+      "y": [0.001045478306325176],
+      "text": "genotype: WT<br />proportion: 1.045478e-03<br />celltype: Ductal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(213,94,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Ductal",
+      "legendgroup": "Ductal",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.98893984353925035,
+      "x": [2],
+      "y": [0.0010790396547073478],
+      "text": "genotype: WT<br />proportion: 1.079040e-03<br />celltype: Endothelial",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(136,34,85,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Endothelial",
+      "legendgroup": "Endothelial",
+      "showlegend": true,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.74661895809327461,
+      "x": [2],
+      "y": [0.00042452544120319402],
+      "text": "genotype: WT<br />proportion: 4.245254e-04<br />celltype: Endothelial",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(136,34,85,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Endothelial",
+      "legendgroup": "Endothelial",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.93333333333333324, 0.98118139048614683],
+      "x": [1, 2],
+      "y": [0.011111111111111072, 0.010716152639832721],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.111111e-02<br />celltype: Endothelial", "genotype: WT<br />proportion: 1.071615e-02<br />celltype: Endothelial"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(136,34,85,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Endothelial",
+      "legendgroup": "Endothelial",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.9960686204431739,
+      "x": [2],
+      "y": [0.0021443888491780028],
+      "text": "genotype: WT<br />proportion: 2.144389e-03<br />celltype: EnP",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(187,187,187,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "EnP",
+      "legendgroup": "EnP",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.89156626506024061, 0.86080388454275736],
+      "x": [1, 2],
+      "y": [0.084337349397590411, 0.12813595899649299],
+      "text": ["genotype: TET1/2/3<br />proportion: 8.433735e-02<br />celltype: EnP", "genotype: WT<br />proportion: 1.281360e-01<br />celltype: EnP"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(187,187,187,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "EnP",
+      "legendgroup": "EnP",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.51417004048582959, 0.61416702043786753],
+      "x": [1, 2],
+      "y": [0.036437246963562653, 0.13245193765540708],
+      "text": ["genotype: TET1/2/3<br />proportion: 3.643725e-02<br />celltype: EnP", "genotype: WT<br />proportion: 1.324519e-01<br />celltype: EnP"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(187,187,187,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "EnP",
+      "legendgroup": "EnP",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.072676450034940526,
+      "x": [2],
+      "y": [0.0013976240391334604],
+      "text": "genotype: WT<br />proportion: 1.397624e-03<br />celltype: EnP",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(187,187,187,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "EnP",
+      "legendgroup": "EnP",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.97909043387349659,
+      "x": [2],
+      "y": [0.002090956612650241],
+      "text": "genotype: WT<br />proportion: 2.090957e-03<br />celltype: EnP",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(187,187,187,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "EnP",
+      "legendgroup": "EnP",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.02734375, 0.75625446747676894],
+      "x": [1, 2],
+      "y": [0.97265625, 0.23981415296640496],
+      "text": ["genotype: TET1/2/3<br />proportion: 9.726562e-01<br />celltype: ESC", "genotype: WT<br />proportion: 2.398142e-01<br />celltype: ESC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.87951807228915635, 0.85459940652819033],
+      "x": [1, 2],
+      "y": [0.012048192771084265, 0.0062044780145670275],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.204819e-02<br />celltype: ESC", "genotype: WT<br />proportion: 6.204478e-03<br />celltype: ESC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.51012145748987814, 0.61192310024865049],
+      "x": [1, 2],
+      "y": [0.0040485829959514552, 0.0022439201892170413],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.048583e-03<br />celltype: ESC", "genotype: WT<br />proportion: 2.243920e-03<br />celltype: ESC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.042016806722688996, 0.055555555555555525],
+      "x": [1, 2],
+      "y": [0.016806722689075598, 0.017120894479385002],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.680672e-02<br />celltype: ESC", "genotype: WT<br />proportion: 1.712089e-02<br />celltype: ESC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.88888888888888884, 0.97699947726084624],
+      "x": [1, 2],
+      "y": [0.044444444444444398, 0.002090956612650352],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.444444e-02<br />celltype: ESC", "genotype: WT<br />proportion: 2.090957e-03<br />celltype: ESC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(68,119,170,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC",
+      "legendgroup": "ESC",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0075053609721229455,
+      "x": [2],
+      "y": [0.74874910650464599],
+      "text": "genotype: WT<br />proportion: 7.487491e-01<br />celltype: ESC_DE",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(238,102,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC_DE",
+      "legendgroup": "ESC_DE",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.016806722689075598, 0.0052410901467505218],
+      "x": [1, 2],
+      "y": [0.025210084033613397, 0.050314465408805006],
+      "text": ["genotype: TET1/2/3<br />proportion: 2.521008e-02<br />celltype: ESC_DE", "genotype: WT<br />proportion: 5.031447e-02<br />celltype: ESC_DE"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(238,102,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC_DE",
+      "legendgroup": "ESC_DE",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.97673810768426494,
+      "x": [2],
+      "y": [0.00026136957658129401],
+      "text": "genotype: WT<br />proportion: 2.613696e-04<br />celltype: ESC_DE",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(238,102,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "ESC_DE",
+      "legendgroup": "ESC_DE",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0071479628305932815,
+      "x": [2],
+      "y": [0.00035739814152966395],
+      "text": "genotype: WT<br />proportion: 3.573981e-04<br />celltype: Liver",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(221,204,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Liver",
+      "legendgroup": "Liver",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.86746987951807208, 0.8349069328297819],
+      "x": [1, 2],
+      "y": [0.012048192771084265, 0.01969247369840843],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.204819e-02<br />celltype: Liver", "genotype: WT<br />proportion: 1.969247e-02<br />celltype: Liver"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(221,204,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Liver",
+      "legendgroup": "Liver",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.59002971678088412,
+      "x": [2],
+      "y": [0.02189338346776637],
+      "text": "genotype: WT<br />proportion: 2.189338e-02<br />celltype: Liver",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(221,204,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Liver",
+      "legendgroup": "Liver",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.57777777777777783, 0.67119707266074202],
+      "x": [1, 2],
+      "y": [0.31111111111111101, 0.30554103502352292],
+      "text": ["genotype: TET1/2/3<br />proportion: 3.111111e-01<br />celltype: Liver", "genotype: WT<br />proportion: 3.055410e-01<br />celltype: Liver"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(221,204,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Liver",
+      "legendgroup": "Liver",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0, 0.0067905646890636176],
+      "x": [1, 2],
+      "y": [0.02734375, 0.00035739814152966395],
+      "text": ["genotype: TET1/2/3<br />proportion: 2.734375e-02<br />celltype: Mesenchymal_Stromal", "genotype: WT<br />proportion: 3.573981e-04<br />celltype: Mesenchymal_Stromal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,121,167,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Mesenchymal_Stromal",
+      "legendgroup": "Mesenchymal_Stromal",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.80145670353385534,
+      "x": [2],
+      "y": [0.033450229295926559],
+      "text": "genotype: WT<br />proportion: 3.345023e-02<br />celltype: Mesenchymal_Stromal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,121,167,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Mesenchymal_Stromal",
+      "legendgroup": "Mesenchymal_Stromal",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.5854812299108495,
+      "x": [2],
+      "y": [0.0045484868700346182],
+      "text": "genotype: WT<br />proportion: 4.548487e-03<br />celltype: Mesenchymal_Stromal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,121,167,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Mesenchymal_Stromal",
+      "legendgroup": "Mesenchymal_Stromal",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0, 0.003144654088050312],
+      "x": [1, 2],
+      "y": [0.016806722689075598, 0.0020964360587002098],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.680672e-02<br />celltype: Mesenchymal_Stromal", "genotype: WT<br />proportion: 2.096436e-03<br />celltype: Mesenchymal_Stromal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,121,167,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Mesenchymal_Stromal",
+      "legendgroup": "Mesenchymal_Stromal",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.67067433350757943,
+      "x": [2],
+      "y": [0.00052273915316258801],
+      "text": "genotype: WT<br />proportion: 5.227392e-04<br />celltype: Mesenchymal_Stromal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,121,167,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Mesenchymal_Stromal",
+      "legendgroup": "Mesenchymal_Stromal",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0064331665475339537,
+      "x": [2],
+      "y": [0.00035739814152966395],
+      "text": "genotype: WT<br />proportion: 3.573981e-04<br />celltype: PFG",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,187,68,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PFG",
+      "legendgroup": "PFG",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.7710843373493973, 0.77717831130294079],
+      "x": [1, 2],
+      "y": [0.096385542168674787, 0.024278392230914547],
+      "text": ["genotype: TET1/2/3<br />proportion: 9.638554e-02<br />celltype: PFG", "genotype: WT<br />proportion: 2.427839e-02<br />celltype: PFG"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,187,68,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PFG",
+      "legendgroup": "PFG",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.50607287449392668, 0.58457153253684269],
+      "x": [1, 2],
+      "y": [0.0040485829959514552, 0.00090969737400681261],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.048583e-03<br />celltype: PFG", "genotype: WT<br />proportion: 9.096974e-04<br />celltype: PFG"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,187,68,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PFG",
+      "legendgroup": "PFG",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.077777777777777793, 0.017773131207527437],
+      "x": [1, 2],
+      "y": [0.5, 0.652901202300052],
+      "text": ["genotype: TET1/2/3<br />proportion: 5.000000e-01<br />celltype: PFG", "genotype: WT<br />proportion: 6.529012e-01<br />celltype: PFG"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(204,187,68,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PFG",
+      "legendgroup": "PFG",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.58451088604524215,
+      "x": [2],
+      "y": [6.064649160053559e-05],
+      "text": "genotype: WT<br />proportion: 6.064649e-05<br />celltype: PGT",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(102,204,238,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PGT",
+      "legendgroup": "PGT",
+      "showlegend": true,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.017511761630946154,
+      "x": [2],
+      "y": [0.0002613695765812836],
+      "text": "genotype: WT<br />proportion: 2.613696e-04<br />celltype: PGT",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(102,204,238,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PGT",
+      "legendgroup": "PGT",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0050035739814152944,
+      "x": [2],
+      "y": [0.0014295925661186593],
+      "text": "genotype: WT<br />proportion: 1.429593e-03<br />celltype: PP",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(170,51,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PP",
+      "legendgroup": "PP",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.0120481927710843, 0.015915834906932835],
+      "x": [1, 2],
+      "y": [0.75903614457831303, 0.76126247639600797],
+      "text": ["genotype: TET1/2/3<br />proportion: 7.590361e-01<br />celltype: PP", "genotype: WT<br />proportion: 7.612625e-01<br />celltype: PP"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(170,51,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PP",
+      "legendgroup": "PP",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.49392712550607243, 0.57122930438474129],
+      "x": [1, 2],
+      "y": [0.012145748987854255, 0.013281581660500863],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.214575e-02<br />celltype: PP", "genotype: WT<br />proportion: 1.328158e-02<br />celltype: PP"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(170,51,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PP",
+      "legendgroup": "PP",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.066666666666666693, 0.010454783063251434],
+      "x": [1, 2],
+      "y": [0.011111111111111099, 0.0070569785676947196],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.111111e-02<br />celltype: PP", "genotype: WT<br />proportion: 7.056979e-03<br />celltype: PP"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(170,51,119,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "PP",
+      "legendgroup": "PP",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0025017869907076442,
+      "x": [2],
+      "y": [0.0025017869907076502],
+      "text": "genotype: WT<br />proportion: 2.501787e-03<br />celltype: SC-alpha",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(230,159,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-alpha",
+      "legendgroup": "SC-alpha",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.013218235770164555,
+      "x": [2],
+      "y": [0.0026975991367682792],
+      "text": "genotype: WT<br />proportion: 2.697599e-03<br />celltype: SC-alpha",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(230,159,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-alpha",
+      "legendgroup": "SC-alpha",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.23076923076923042, 0.44884468433501129],
+      "x": [1, 2],
+      "y": [0.26315789473684204, 0.12238462004973],
+      "text": ["genotype: TET1/2/3<br />proportion: 2.631579e-01<br />celltype: SC-alpha", "genotype: WT<br />proportion: 1.223846e-01<br />celltype: SC-alpha"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(230,159,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-alpha",
+      "legendgroup": "SC-alpha",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0024458420684835749,
+      "x": [2],
+      "y": [0.00069881201956673716],
+      "text": "genotype: WT<br />proportion: 6.988120e-04<br />celltype: SC-alpha",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(230,159,0,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-alpha",
+      "legendgroup": "SC-alpha",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.012678715942810899,
+      "x": [2],
+      "y": [0.00053951982735365653],
+      "text": "genotype: WT<br />proportion: 5.395198e-04<br />celltype: SC-beta",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(86,180,233,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-beta",
+      "legendgroup": "SC-beta",
+      "showlegend": true,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.052631578947368418, 0.24319243131784829],
+      "x": [1, 2],
+      "y": [0.178137651821862, 0.205652253017163],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.781377e-01<br />celltype: SC-beta", "genotype: WT<br />proportion: 2.056523e-01<br />celltype: SC-beta"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(86,180,233,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-beta",
+      "legendgroup": "SC-beta",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0017470300489168379,
+      "x": [2],
+      "y": [0.00069881201956673695],
+      "text": "genotype: WT<br />proportion: 6.988120e-04<br />celltype: SC-beta",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(86,180,233,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-beta",
+      "legendgroup": "SC-beta",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0099320439100888617,
+      "x": [2],
+      "y": [0.0005227391531625724],
+      "text": "genotype: WT<br />proportion: 5.227392e-04<br />celltype: SC-beta",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(86,180,233,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-beta",
+      "legendgroup": "SC-beta",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.011599676288103589,
+      "x": [2],
+      "y": [0.0010790396547073096],
+      "text": "genotype: WT<br />proportion: 1.079040e-03<br />celltype: SC-delta",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,114,178,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-delta",
+      "legendgroup": "SC-delta",
+      "showlegend": true,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.040485829959514122, 0.22384620049730128],
+      "x": [1, 2],
+      "y": [0.012145748987854296, 0.019346230820547011],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.214575e-02<br />celltype: SC-delta", "genotype: WT<br />proportion: 1.934623e-02<br />celltype: SC-delta"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,114,178,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-delta",
+      "legendgroup": "SC-delta",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.00139762403913347,
+      "x": [2],
+      "y": [0.00034940600978336793],
+      "text": "genotype: WT<br />proportion: 3.494060e-04<br />celltype: SC-delta",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,114,178,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-delta",
+      "legendgroup": "SC-delta",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.000357398141529664,
+      "x": [2],
+      "y": [0.0021443888491779802],
+      "text": "genotype: WT<br />proportion: 2.144389e-03<br />celltype: SC-EC",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,158,115,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-EC",
+      "legendgroup": "SC-EC",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0099811168060426197,
+      "x": [2],
+      "y": [0.0016185594820609696],
+      "text": "genotype: WT<br />proportion: 1.618559e-03<br />celltype: SC-EC",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,158,115,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-EC",
+      "legendgroup": "SC-EC",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0.0040485829959514196, 0.00885438777366729],
+      "x": [1, 2],
+      "y": [0.036437246963562701, 0.21499181272363399],
+      "text": ["genotype: TET1/2/3<br />proportion: 3.643725e-02<br />celltype: SC-EC", "genotype: WT<br />proportion: 2.149918e-01<br />celltype: SC-EC"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,158,115,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-EC",
+      "legendgroup": "SC-EC",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0.0094093047569262893,
+      "x": [2],
+      "y": [0.0005227391531625724],
+      "text": "genotype: WT<br />proportion: 5.227392e-04<br />celltype: SC-EC",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(0,158,115,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "SC-EC",
+      "legendgroup": "SC-EC",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0,
+      "x": [2],
+      "y": [0.000357398141529664],
+      "text": "genotype: WT<br />proportion: 3.573981e-04<br />celltype: Stromal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(17,119,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Stromal",
+      "legendgroup": "Stromal",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0, 0],
+      "x": [1, 2],
+      "y": [0.0120481927710843, 0.0099811168060426197],
+      "text": ["genotype: TET1/2/3<br />proportion: 1.204819e-02<br />celltype: Stromal", "genotype: WT<br />proportion: 9.981117e-03<br />celltype: Stromal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(17,119,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Stromal",
+      "legendgroup": "Stromal",
+      "showlegend": false,
+      "xaxis": "x2",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0, 0],
+      "x": [1, 2],
+      "y": [0.0040485829959514196, 0.00885438777366729],
+      "text": ["genotype: TET1/2/3<br />proportion: 4.048583e-03<br />celltype: Stromal", "genotype: WT<br />proportion: 8.854388e-03<br />celltype: Stromal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(17,119,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Stromal",
+      "legendgroup": "Stromal",
+      "showlegend": false,
+      "xaxis": "x3",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.90000000000000013,
+      "base": 0,
+      "x": [2],
+      "y": [0.00139762403913347],
+      "text": "genotype: WT<br />proportion: 1.397624e-03<br />celltype: Stromal",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(17,119,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Stromal",
+      "legendgroup": "Stromal",
+      "showlegend": false,
+      "xaxis": "x4",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": [0.89999999999999991, 0.90000000000000013],
+      "base": [0, 0],
+      "x": [1, 2],
+      "y": [0.066666666666666693, 0.0094093047569262893],
+      "text": ["genotype: TET1/2/3<br />proportion: 6.666667e-02<br />celltype: Stromal", "genotype: WT<br />proportion: 9.409305e-03<br />celltype: Stromal"],
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(17,119,51,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Stromal",
+      "legendgroup": "Stromal",
+      "showlegend": false,
+      "xaxis": "x5",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    }
+  ],
+  "layout": {
+    "margin": {
+      "t": 42.301369863013704,
+      "r": 7.3059360730593621,
+      "b": 43.583801832095446,
+      "l": 34.337899543379002
+    },
+    "plot_bgcolor": "rgba(255,255,255,1)",
+    "paper_bgcolor": "rgba(255,255,255,1)",
+    "font": {
+      "color": "rgba(0,0,0,1)",
+      "family": "",
+      "size": 14.611872146118724
+    },
+    "xaxis": {
+      "domain": [0, 0.19714611872146121],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 2.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["TET1/2/3", "WT"],
+      "tickvals": [1, 2],
+      "categoryorder": "array",
+      "categoryarray": ["TET1/2/3", "WT"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "yaxis": {
+      "domain": [0, 1],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [-0.050000000000000024, 1.0500000000000005],
+      "tickmode": "array",
+      "ticktext": ["0.00", "0.25", "0.50", "0.75", "1.00"],
+      "tickvals": [0, 0.25, 0.5, 0.75, 1],
+      "categoryorder": "array",
+      "categoryarray": ["0.00", "0.25", "0.50", "0.75", "1.00"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -0,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "x",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "shapes": [
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0,
+        "x1": 0.19714611872146121,
+        "y0": 0,
+        "y1": 1
+      },
+      {
+        "type": "rect",
+        "fillcolor": "rgba(242,242,242,1)",
+        "line": {
+          "color": "transparent",
+          "width": 1.32835201328352,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0,
+        "x1": 0.19714611872146121,
+        "y0": 0,
+        "y1": 23.37899543378996,
+        "yanchor": 1,
+        "ysizemode": "pixel"
+      },
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.20285388127853882,
+        "x1": 0.39714611872146122,
+        "y0": 0,
+        "y1": 1
+      },
+      {
+        "type": "rect",
+        "fillcolor": "rgba(242,242,242,1)",
+        "line": {
+          "color": "transparent",
+          "width": 1.32835201328352,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.20285388127853882,
+        "x1": 0.39714611872146122,
+        "y0": 0,
+        "y1": 23.37899543378996,
+        "yanchor": 1,
+        "ysizemode": "pixel"
+      },
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.40285388127853883,
+        "x1": 0.59714611872146128,
+        "y0": 0,
+        "y1": 1
+      },
+      {
+        "type": "rect",
+        "fillcolor": "rgba(242,242,242,1)",
+        "line": {
+          "color": "transparent",
+          "width": 1.32835201328352,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.40285388127853883,
+        "x1": 0.59714611872146128,
+        "y0": 0,
+        "y1": 23.37899543378996,
+        "yanchor": 1,
+        "ysizemode": "pixel"
+      },
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.60285388127853889,
+        "x1": 0.79714611872146124,
+        "y0": 0,
+        "y1": 1
+      },
+      {
+        "type": "rect",
+        "fillcolor": "rgba(242,242,242,1)",
+        "line": {
+          "color": "transparent",
+          "width": 1.32835201328352,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.60285388127853889,
+        "x1": 0.79714611872146124,
+        "y0": 0,
+        "y1": 23.37899543378996,
+        "yanchor": 1,
+        "ysizemode": "pixel"
+      },
+      {
+        "type": "rect",
+        "fillcolor": null,
+        "line": {
+          "color": null,
+          "width": 0,
+          "linetype": []
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.80285388127853885,
+        "x1": 1,
+        "y0": 0,
+        "y1": 1
+      },
+      {
+        "type": "rect",
+        "fillcolor": "rgba(242,242,242,1)",
+        "line": {
+          "color": "transparent",
+          "width": 1.32835201328352,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0.80285388127853885,
+        "x1": 1,
+        "y0": 0,
+        "y1": 23.37899543378996,
+        "yanchor": 1,
+        "ysizemode": "pixel"
+      }
+    ],
+    "annotations": [
+      {
+        "text": "D-1",
+        "x": 0.098573059360730603,
+        "y": 1,
+        "showarrow": false,
+        "ax": 0,
+        "ay": 0,
+        "font": {
+          "color": "rgba(26,26,26,1)",
+          "family": "",
+          "size": 11.68949771689498
+        },
+        "xref": "paper",
+        "yref": "paper",
+        "textangle": -0,
+        "xanchor": "center",
+        "yanchor": "bottom"
+      },
+      {
+        "text": "D11",
+        "x": 0.30000000000000004,
+        "y": 1,
+        "showarrow": false,
+        "ax": 0,
+        "ay": 0,
+        "font": {
+          "color": "rgba(26,26,26,1)",
+          "family": "",
+          "size": 11.68949771689498
+        },
+        "xref": "paper",
+        "yref": "paper",
+        "textangle": -0,
+        "xanchor": "center",
+        "yanchor": "bottom"
+      },
+      {
+        "text": "D18",
+        "x": 0.5,
+        "y": 1,
+        "showarrow": false,
+        "ax": 0,
+        "ay": 0,
+        "font": {
+          "color": "rgba(26,26,26,1)",
+          "family": "",
+          "size": 11.68949771689498
+        },
+        "xref": "paper",
+        "yref": "paper",
+        "textangle": -0,
+        "xanchor": "center",
+        "yanchor": "bottom"
+      },
+      {
+        "text": "D3",
+        "x": 0.70000000000000007,
+        "y": 1,
+        "showarrow": false,
+        "ax": 0,
+        "ay": 0,
+        "font": {
+          "color": "rgba(26,26,26,1)",
+          "family": "",
+          "size": 11.68949771689498
+        },
+        "xref": "paper",
+        "yref": "paper",
+        "textangle": -0,
+        "xanchor": "center",
+        "yanchor": "bottom"
+      },
+      {
+        "text": "D7",
+        "x": 0.90142694063926943,
+        "y": 1,
+        "showarrow": false,
+        "ax": 0,
+        "ay": 0,
+        "font": {
+          "color": "rgba(26,26,26,1)",
+          "family": "",
+          "size": 11.68949771689498
+        },
+        "xref": "paper",
+        "yref": "paper",
+        "textangle": -0,
+        "xanchor": "center",
+        "yanchor": "bottom"
+      }
+    ],
+    "xaxis2": {
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 2.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["TET1/2/3", "WT"],
+      "tickvals": [1, 2],
+      "categoryorder": "array",
+      "categoryarray": ["TET1/2/3", "WT"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "domain": [0.20285388127853882, 0.39714611872146122],
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "xaxis3": {
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 2.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["TET1/2/3", "WT"],
+      "tickvals": [1, 2],
+      "categoryorder": "array",
+      "categoryarray": ["TET1/2/3", "WT"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "domain": [0.40285388127853883, 0.59714611872146128],
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "xaxis4": {
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 2.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["TET1/2/3", "WT"],
+      "tickvals": [1, 2],
+      "categoryorder": "array",
+      "categoryarray": ["TET1/2/3", "WT"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "domain": [0.60285388127853889, 0.79714611872146124],
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "xaxis5": {
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 2.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["TET1/2/3", "WT"],
+      "tickvals": [1, 2],
+      "categoryorder": "array",
+      "categoryarray": ["TET1/2/3", "WT"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": true,
+      "linecolor": "rgba(0,0,0,1)",
+      "linewidth": 0.66417600664176002,
+      "showgrid": false,
+      "domain": [0.80285388127853885, 1],
+      "gridcolor": null,
+      "gridwidth": 0,
+      "zeroline": false,
+      "anchor": "y",
+      "title": "",
+      "hoverformat": ".2f"
+    },
+    "showlegend": true,
+    "legend": {
+      "bgcolor": "rgba(255,255,255,1)",
+      "bordercolor": "transparent",
+      "borderwidth": 1.8897637795275593,
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "title": {
+        "text": "",
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.611872146118724
+        }
+      }
+    },
+    "hovermode": "closest",
+    "barmode": "relative"
+  },
+  "config": {
+    "doubleClick": "reset",
+    "modeBarButtonsToAdd": ["hoverclosest", "hovercompare"],
+    "showSendToCloud": false
+  },
+  "source": "A",
+  "attrs": {
+    "2a93192b3ce7": {
+      "x": {},
+      "y": {},
+      "fill": {},
+      "type": "bar"
+    }
+  },
+  "cur_data": "2a93192b3ce7",
+  "visdat": {
+    "2a93192b3ce7": ["function (y) ", "x"]
+  },
+  "highlight": {
+    "on": "plotly_click",
+    "persistent": false,
+    "dynamic": false,
+    "selectize": false,
+    "opacityDim": 0.20000000000000001,
+    "selected": {
+      "opacity": 1
+    },
+    "debounce": 0
+  },
+  "shinyEvents": ["plotly_hover", "plotly_click", "plotly_selected", "plotly_relayout", "plotly_brushed", "plotly_brushing", "plotly_clickannotation", "plotly_doubleclick", "plotly_deselect", "plotly_afterplot", "plotly_sunburstclick"],
+  "base_url": "https://plot.ly"
+}

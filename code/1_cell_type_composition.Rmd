@@ -1,0 +1,863 @@
+---
+title: "Cell Type Composition"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+---
+
+> condition by time point
+
+> only consider time points in KO village samples
+
+# libraries
+
+```{r load_libraries, warning = FALSE, message = FALSE}
+library(Seurat)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+library(cowplot)  
+library(patchwork)
+library(stringr)
+library(pheatmap)
+library(reshape2)
+library(readxl)
+library(stringr)
+library(DESeq2)
+library(gridExtra)
+library(ggrepel)
+library(ggpubr)
+library(tidyverse)
+
+theme_set(theme_classic())
+
+
+data_dir = "/home/zli4/MSK_DEC24/Analysis"
+
+out_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/cell_type_composition"
+
+set.seed(022520)
+```
+
+
+```{r}
+lm_plot=function(mod){
+  summary_model= summary(mod)
+  coefficients= summary_model$coefficients
+  coeff_df= as.data.frame(coefficients)
+  coeff_df$Predictor= rownames(coeff_df)
+
+  significant_predictors= coeff_df %>%
+    filter(Predictor != "(Intercept)" & `Pr(>|t|)` < 0.05)
+  
+
+  conf_int= confint(mod)
+  conf_df= as.data.frame(conf_int)
+  conf_df$Predictor= rownames(conf_df)
+  
+  # Merge with the significant predictors
+  plot_data= merge(significant_predictors, conf_df, by = "Predictor")
+  names(plot_data)= c("Predictor", "Estimate", "Std.Error", "t.value", "p.value", "CI.Lower", "CI.Upper")
+  
+  plot_data$Predictor = gsub(paste(c("genotype"), collapse = "|"), "", plot_data$Predictor)
+  fig = ggplot(plot_data, aes(x = reorder(Predictor, Estimate), y = Estimate)) +
+    geom_point() +
+    geom_errorbar(aes(ymin = CI.Lower, ymax = CI.Upper), width = 0.2) +
+    coord_flip() +  # Flip the coordinates for better readability
+    theme_minimal() +
+    labs(
+      title = "Estimates and Confidence Intervals for Significant Predictors",
+      x = "",
+      y = "Estimate"
+    )
+  return(fig)
+}
+
+lm_plot_exp=function(mod){
+  summary_model= summary(mod)
+  coefficients= summary_model$coefficients
+  coeff_df= as.data.frame(coefficients)
+  coeff_df$Predictor= rownames(coeff_df)
+
+  significant_predictors= coeff_df %>%
+    filter(Predictor != "(Intercept)" & `Pr(>|t|)` < 0.05)
+  
+
+  conf_int= confint(mod)
+  conf_df= as.data.frame(conf_int)
+  conf_df$Predictor= rownames(conf_df)
+  
+  # Merge with the significant predictors
+  plot_data= merge(significant_predictors, conf_df, by = "Predictor")
+  names(plot_data)= c("Predictor", "Estimate", "Std.Error", "t.value", "p.value", "CI.Lower", "CI.Upper")
+  
+  plot_data$Predictor = gsub(paste(c("genotype"), collapse = "|"), "", plot_data$Predictor)
+  fig = ggplot(plot_data, aes(x = reorder(Predictor, Estimate), y = exp(Estimate))) +
+    geom_point() +
+    geom_errorbar(aes(ymin = exp(CI.Lower), ymax = exp(CI.Upper)), width = 0.2) +
+    coord_flip() +  # Flip the coordinates for better readability
+    theme_minimal() +
+    labs(
+      title = "Estimates and Confidence Intervals for Significant Predictors",
+      x = "",
+      y = "Estimate"
+    )
+  return(fig)
+}
+```
+
+
+
+
+# load data
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+```
+
+```{r}
+
+
+# remove cells without cell type annotations
+keep.cells= rownames(integrated@meta.data)[
+  !is.na(integrated@meta.data$celltype)
+]
+
+integrated= subset(
+  integrated,
+  cells = keep.cells
+)
+integrated$celltype = as.factor(integrated$celltype)
+summary(integrated$celltype)
+```
+
+# order cell types
+
+```{r}
+celltype_orders = c(
+  "ESC",
+  "ESC_DE",
+  "DE",
+  "PFG",
+  "PGT",
+  "PP",
+  "EnP",
+  "SC-EC",
+  "SC-alpha",
+  "SC-beta",
+  "SC-delta",
+  "Ductal",
+  "Mesenchymal_Stromal",
+  "Stromal",
+  "Endothelial",
+  "Liver"
+)
+
+integrated$celltype = factor(integrated$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+tol_okabe16 <- c(
+  "#4477AA", "#EE6677", "#228833", "#CCBB44",
+  "#66CCEE", "#AA3377", "#BBBBBB", "#009E73",
+  "#E69F00", "#56B4E9", "#0072B2", "#D55E00",
+  "#CC79A7", "#117733", "#882255", "#DDCC77"
+)
+
+celltype_palette = setNames(
+  tol_okabe16,
+  celltype_orders
+)
+saveRDS(celltype_palette,"/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/celltype_palette.RDS")
+celltype_palette = readRDS("/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/celltype_palette.RDS")
+```
+
+# filter by time points
+
+```{r}
+obj = integrated%>%subset(subset = time_point%in%c("D-1","D3","D7","D11","D18"))
+
+obj$time_point = droplevels(obj$time_point)
+summary(obj$time_point)
+```
+
+```{r}
+
+meta_df = obj[[]]
+
+cell_counts = meta_df %>%
+  group_by(time_point, celltype, feature.4) %>%
+  summarise(
+    n_cells = n(),
+    .groups = "drop"
+  )
+
+
+head(cell_counts)
+write.table(
+  cell_counts,
+  file      = file.path(out_dir,"cell_counts.tsv"),
+  sep       = "\t",
+  quote     = FALSE,
+  row.names = FALSE
+)
+```
+
+## sample by time point
+
+```{r}
+table(obj$sample_name,obj$time_point)
+```
+
+
+## genotype by time point
+
+```{r}
+table(obj$genotype,obj$time_point)
+
+```
+
+## cell type by time point
+
+```{r}
+table(obj$celltype,obj$time_point)
+
+```
+
+
+# cell-type proportions by time_point
+
+```{r}
+meta = obj[[]]
+```
+
+
+
+```{r,fig.width=8,fig.height=6}
+
+
+# ignore time points unique to external WT samples
+common_times = rownames(table(meta$time_point,meta$source))[rowSums(table(meta$time_point,meta$source)!=0)==2] 
+
+
+prop_by_time = meta %>%
+  filter(time_point %in% common_times) %>%
+  group_by(time_point, celltype) %>%
+  summarise(n = n(), .groups = "drop_last") %>%
+  mutate(prop = n / sum(n)) %>%         # within each time_point
+  ungroup()
+
+fig1= prop_by_time%>%ggplot(aes(x = time_point, y = prop, fill = celltype)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent_format(1)) +
+  scale_fill_manual(
+    values = celltype_palette,   
+    drop   = TRUE                
+  )+
+  labs(
+    title = "cell-type proportions by time point",
+    x     = "",
+    y     = "",
+    fill  = ""
+  ) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE)) +
+  theme_classic() +
+  theme(
+    legend.position   = "top",           # ← move legend to top
+    legend.direction  = "horizontal",    # ← ensure it’s laid out horizontally
+    axis.text.x       = element_text(angle = 45, hjust = 1)
+  )
+fig1
+ggsave(
+  filename = file.path(out_dir,"celltype_prop_time.png"),
+  plot     = fig1,
+  width    = 8,
+  height   = 4,
+  units    = "in",
+  dpi      = 300
+)
+
+```
+
+#  cell-type proportions by genotype
+
+```{r,fig.width=8,fig.height=6}
+
+
+prop_by_genotype = meta %>%
+  group_by(genotype, celltype) %>%
+  summarise(n = n(), .groups = "drop_last") %>%
+  mutate(prop = n / sum(n)) %>%         # within each genotype
+  ungroup()
+
+fig2 = prop_by_genotype %>%
+  ggplot(aes(x = genotype, y = prop, fill = celltype)) +
+  geom_col() +
+  scale_y_continuous(labels = scales::percent_format(1)) +
+  scale_fill_manual(
+    values = celltype_palette,   
+    drop   = TRUE                
+  )+
+  labs(
+    title = "cell-type proportions by genotype",
+    x     = "",
+    y     = "",
+    fill  = ""
+  ) +
+  guides(fill = guide_legend(nrow = 3, byrow = TRUE)) +
+  theme_classic() +
+  theme(
+    legend.position   = "top",           # ← move legend to top
+    legend.direction  = "horizontal",    # ← ensure it’s laid out horizontally
+    axis.text.x       = element_text(angle = 45, hjust = 1)
+  )
+
+ggsave(
+  filename = file.path(out_dir,"celltype_prop_genotype.png"),
+  plot     = fig2,
+  width    = 8,
+  height   = 4,
+  units    = "in",
+  dpi      = 300
+)
+fig2
+```
+
+
+
+
+# split seurat object by time points
+
+
+```{r}
+obj_list = SplitObject(obj, split.by = "time_point")
+obj_list
+```
+
+
+
+
+# cell-type proportions by genotype (conditioned on time point)
+
+
+```{r, warning = FALSE, message=FALSE}
+prop_lst = lapply(c("D-1","D3","D7","D11","D18"),function(tp){
+  df = obj_list[[tp]][[]]
+  df = df %>% group_by(genotype, celltype) %>%
+  summarise(count = n()) %>%
+  mutate(proportion = count / sum(count)) %>%
+  arrange(genotype, desc(proportion))
+  df$time_point = tp
+  return(df)
+})
+names(prop_lst) = c("D-1","D3","D7","D11","D18")
+
+prop_lst_all = Reduce(rbind,prop_lst)
+write.csv(prop_lst_all,file.path(out_dir,"ct_prop_all.csv"))
+```
+
+
+
+
+```{r,fig.width=8,fig.height=6}
+
+fig_list = lapply( c("D3","D7","D11","D18"),function(tp){
+  df = prop_lst[[tp]] 
+  df %>%
+    ggplot(aes(x = genotype, y = proportion, fill = celltype)) +
+    geom_col() +
+    scale_y_continuous(labels = scales::percent_format(1)) +
+    scale_fill_manual(
+      values = celltype_palette,   
+      drop   = TRUE      
+    )+
+    labs(
+      title = tp,
+      x     = "",
+      y     = "cell-type proportions",
+      fill  = ""
+    ) +
+    guides(fill = guide_legend(nrow = 3, byrow = TRUE)) +
+    theme_classic() +
+    theme(
+      legend.position   = "top",           # ← move legend to top
+      legend.direction  = "horizontal",    # ← ensure it’s laid out horizontally
+      axis.text.x       = element_text(angle = 45, hjust = 1)
+    )
+})
+names(fig_list) = c("D3","D7","D11","D18")
+
+for(tp in names(fig_list)){
+  ggsave(file.path(out_dir,paste0("genotype_celltype_proportion/",tp,".png",sep='')),
+         plot     = fig_list[[tp]],
+  width    = 8,
+  height   = 6,
+  units    = "in",
+  dpi      = 300
+  )
+}
+
+fig_list
+```
+
+# genotype-wise similarity using cell type compositions (conditioned on time point)
+
+> using centering log ratio transformation
+
+```{r, fig.width=8,fig.height=8, warning = FALSE, message= FALSE}
+fig_list = list()
+for(tp in names(prop_lst)){
+  
+  df = prop_lst[[tp]]
+  df$celltype = as.factor(df$celltype)
+  levels(df$celltype)=gsub("_","-",levels(df$celltype)) # rename celltype levels
+  
+  df = df%>%
+    group_by(genotype)%>%
+    mutate(geom_mean = exp(mean(log(proportion))))%>%
+    mutate(clr = log(proportion/geom_mean))
+  
+  df$celltype = droplevels(df$celltype)
+  print(unique(df$celltype))
+  
+  clr = df %>%
+    select(genotype, celltype, clr) %>%
+    tidyr::spread(key = celltype, value = clr) %>%
+    tibble::column_to_rownames(var = "genotype") %>%
+    as.matrix()
+  
+  clr[is.na(clr)] = 2*min(clr,na.rm=T) # deal with NA values
+  
+  clr_dist = as.matrix(dist(clr, method = "euclidean"))
+  hc = hclust(as.dist(clr_dist))
+  d = mean(  clr_dist)
+  fig = pheatmap::pheatmap(exp(-clr_dist^2/(2*d)),
+                           clustering_method = 'ward.D',
+                           cluster_rows = hc,cluster_cols =hc,main = tp,fontsize = 5)
+  fig_list[[tp]] = fig[[4]]
+}
+g = gridExtra::grid.arrange(gridExtra::arrangeGrob(grobs= fig_list,ncol=2))
+ggsave(file.path(out_dir,"geno_similarity_cell-type-composition.png"),g)
+g
+```
+
+
+# create pseudobulk data
+
+
+
+```{r make-pseudobulk, message = FALSE, warning=FALSE}
+f_pseudobulk_list = file.path(out_dir,"ct_composition_pseudobulk_list.RDS")
+
+if(file.exists(f_pseudobulk_list)){
+  pseudo_obj_list = readRDS(f_pseudobulk_list)
+}else{
+  pseudo_obj_list = list()
+  for(tp in c("D-1","D3","D7","D11","D18")){
+    print(paste0("working on ", tp))
+    obj = obj_list[[tp]]
+    obj$background = as.factor(obj$background)
+    obj$genotype = as.factor(obj$genotype)
+    levels(obj$celltype)=gsub("_","-",levels(obj$celltype)) # rename celltype levels
+    obj$celltype = droplevels(obj$celltype)
+    obj$pseudo.sample.id = as.factor(paste(obj$sample_name,obj$background,obj$genotype,obj$feature.4,sep='_')) # handle cell type names
+    pseudo_obj= AggregateExpression(obj, assays = "RNA", return.seurat = T,
+                                        group.by = c("sample_name","background","genotype", "feature.4"))
+    obj$pseudo.sample.id =  gsub("-","_",obj$pseudo.sample.id)
+    pseudo_obj$pseudo.sample.id = gsub("-","_", colnames(pseudo_obj))
+    pseudo_meta = pseudo_obj[[]]
+    df = obj[[]] %>% 
+      group_by(pseudo.sample.id, celltype) %>%
+    summarise(count = n(),.groups = "drop") %>%
+    tidyr::complete(pseudo.sample.id, celltype, fill = list(count = 0))%>%
+       group_by(pseudo.sample.id) %>%
+    mutate(proportion = count / sum(count)) 
+    
+    df_wide = df%>%tidyr::pivot_wider(names_from = celltype, values_from = c(count,proportion))
+    pseudo_meta  = pseudo_meta %>%left_join(df_wide)
+    rownames(pseudo_meta) = pseudo_meta$orig.ident
+    
+    n.df=obj[[]]%>%dplyr::count(pseudo.sample.id)
+    pseudo_meta = pseudo_meta %>%left_join(n.df)
+    rownames(pseudo_meta) = pseudo_meta$orig.ident
+    
+    pseudo_obj@meta.data =  pseudo_meta 
+    
+    pseudo_obj$source =as.factor(ifelse(pseudo_obj$sample_name%in%c("A","B","C","D","E","F"),"external_WT", "KO_village" ))
+    
+    pseudo_obj_list[[tp]] = pseudo_obj
+  }
+  saveRDS(pseudo_obj_list,f_pseudobulk_list)
+}
+```
+
+
+```{r}
+names(celltype_palette) = gsub("_","-",names(celltype_palette))
+```
+
+## check sample compositions for each time point
+
+```{r}
+for(tp in c("D-1","D3","D7","D11","D18")){
+  print(tp)
+  df = pseudo_obj_list[[tp]][[]]
+  print(summary(as.factor(df$sample_name)))
+}
+
+```
+
+
+# remove pseudobulk samples with < 30 cells
+
+```{r}
+min_cells = 30
+```
+
+
+```{r}
+
+pseudo_obj_list = lapply(pseudo_obj_list,function(pseudo_obj){
+  pseudo_obj%>%subset(subset = n>=min_cells)
+})
+pseudo_obj_list
+```
+
+
+
+# barplot for pseudobulk cell type proportions
+
+```{r proportion-barplots, fig.width = 12,fig.height=10}
+barplot_list = list()
+for(tp in c("D3","D7","D11","D18")){
+  pseudo_obj = pseudo_obj_list[[tp]]
+  df = pseudo_obj[[]]
+  df_long= df %>%
+  tidyr::pivot_longer(cols = starts_with("proportion_"), 
+               names_to = "celltype", 
+               values_to = "Proportion")
+  df_long$celltype = gsub("proportion_","",df_long$celltype) 
+  df_long = df_long %>%
+  mutate(
+    celltype = factor(celltype, levels = gsub("_","-",celltype_orders),ordered = TRUE)
+  )
+  
+  fig = ggplot(df_long, aes(x = pseudo.sample.id, y = Proportion, fill = celltype)) +
+    geom_col(position = "stack") +
+    scale_fill_manual(
+      values =celltype_palette,   
+      drop   = TRUE                
+    )+
+    facet_wrap(~ genotype, 
+               nrow = 2, 
+               scales = "free_x", 
+               strip.position = "top") +
+    ylab("cell type proportion") +
+    xlab("pseudobulk samples") +
+    labs(
+      title = tp,
+      x     = "pseudobulk samples",
+      y     = "cell type proportion",
+      fill  = ""
+    ) +
+    guides(fill = guide_legend(nrow = 2, byrow = TRUE)) +
+    theme_pubr() +
+    theme(
+      strip.text = element_text(angle = 90, size = 8, hjust = 0, face = "bold"),
+      strip.background = element_rect(colour = "black", fill = "grey95", linewidth = 0),
+      axis.text.x = element_blank(),
+      axis.line = element_blank(),
+      axis.ticks = element_blank()
+    )
+
+  barplot_list[[tp]] = fig
+}
+
+for(tp in names(barplot_list)){
+  ggsave(file.path(out_dir,paste0("pseudobulk_celltype_proportion/",tp,".png",sep='')),
+         plot     = barplot_list[[tp]],
+  width    = 12,
+  height   = 10,
+  units    = "in",
+  dpi      = 300
+  )
+}
+
+
+barplot_list
+```
+
+
+
+
+
+
+# check distribution of cell type log proportions
+
+
+```{r}
+
+for( tp in c("D3","D7","D11","D18")){
+  obj = pseudo_obj_list[[tp]]
+  df =  obj[[]]
+  ct_response =  gsub("count_","",grep("^count_", names(df), value = TRUE))
+  n = nrow(df)
+  # create log proportions
+  for(ct in ct_response){
+    df[,paste("proportion0",ct,sep="_")] = df[,paste("proportion",ct,sep="_")]*(n-1)/n+0.5/n # transformation used by DR_data
+    df[[paste("log_prop", ct,sep="_")]] = log(df[,paste("proportion0",ct,sep="_")] )
+    print(paste(ct, " # Inf: ", sum(is.infinite(df[[paste("log_prop", ct,sep="_")]] )),sep=''))
+  }
+  
+  for(c in grep("^log_prop_", colnames(df), value = TRUE)){
+    hist(as.vector(df[c])[[1]],main = paste(tp, c,sep=" : "),xlab = "log proportion")
+  }
+}
+
+
+```
+
+# run linear model and plot 95% confidence intervals of significant predictors
+
+
+```{r linear-model}
+fig_list =list()
+coef_list = list()
+p_list = list()
+for( tp in c("D3","D7","D11","D18")){
+  df =  pseudo_obj_list[[tp]][[]]
+  ct_response = gsub("count_","",grep("^count_", names(df), value = TRUE))
+  n = nrow(df)
+  # create log proportions
+  for(ct in ct_response){
+    df[,paste("proportion0",ct,sep="_")] = df[,paste("proportion",ct,sep="_")]*(n-1)/n+0.5/n # transformation used by DR_data
+    df[[paste("log_prop", ct,sep="_")]] = log(df[,paste("proportion0",ct,sep="_")] )
+  }
+  
+  mod_tp = list()
+  coef_mtx = list()
+  p_mtx = list()
+  for(ct in ct_response){
+    # run regression
+    if(max(df[,paste("proportion",ct,sep="_")])>0.03){
+      df$genotype = as.factor(df$genotype)
+      df$genotype = relevel(df$genotype, ref = "WT")
+      v = as.symbol(paste("log_prop", ct,sep="_"))
+      mod = eval(bquote(lm(.(v)~source+background+genotype,data=df)))
+      mod_tp[[ct]] = mod
+      coef_mtx[[ct]] = summary(mod)$coefficients[grepl("genotype", names(summary(mod)$coefficients[,4])),1]
+      p_mtx[[ct]] = summary(mod)$coefficients[grepl("genotype", names(summary(mod)$coefficients[,4])),4]
+    }
+  }
+  coef_mtx = do.call(cbind,coef_mtx);rownames(coef_mtx) = gsub("genotype","",rownames(coef_mtx) )
+  p_mtx = do.call(cbind,p_mtx);rownames(p_mtx) = gsub("genotype","",rownames(p_mtx) )
+  coef_list[[tp]] = coef_mtx
+  p_list[[tp]] = p_mtx
+  
+  # visualize results
+  for(ct in names(mod_tp)){
+    if(any(p_mtx[,ct]<=0.05)){
+          mod = mod_tp[[ct]]
+      fig = lm_plot(mod)+
+                   ggtitle(paste(tp, ":", ct,sep=''))+
+        theme(plot.title = element_text(size = 10, face = "bold"))
+      fig_list[[paste(tp,ct,sep="_")]] = fig
+    }
+  }
+}
+
+```
+
+
+
+
+> only cell types with at least one genotype as a significant predictors are shown
+
+```{r coef-plot,fig.height = 15,fig.width=15, message = FALSE, warning = FALSE}
+
+coef_fig = gridExtra::grid.arrange(grobs = fig_list,ncol = 6,top = "Significant Coefficients on cell-type log(proportion)")
+print(coef_fig)
+ggsave(file.path(out_dir,"log_proportion_lm_coef.png"),coef_fig,width = 15,height=15)
+
+```
+
+# heatmaps of estimated coefficients for genotypes
+
+> values are truncated at $\pm 3$ for visualization purpose
+
+```{r}
+meta%>%filter(time_point=='D3')%>%group_by(celltype)%>%summarise(n=n())
+```
+
+
+
+```{r coef-htmap}
+
+htmap_list = list()
+for(tp in names(coef_list)){
+  coef_mtx =coef_list[[tp]]
+  coef_mtx[coef_mtx>3] = 3;coef_mtx[coef_mtx=3] = -3
+  htmap = pheatmap::pheatmap(coef_mtx,cluster_cols = F,fontsize = 5,
+                      color = colorRampPalette(c("blue", "white", "red"))(50),
+                      breaks = seq(min(coef_mtx,na.rm=T), max(coef_mtx,na.rm=T), length.out = 51),
+                     main = tp)
+  htmap_list[[tp]] = htmap
+}
+names(htmap_list) = names(coef_list)
+
+for(tp in names(htmap_list)){
+  png(file.path(out_dir,paste0("coefs_htmaps/",tp,".png",sep='')),width = 8,height = 6,unit = "in",res = 1000)
+    print(htmap_list[[tp]])
+  dev.off()
+  print(htmap)
+}
+
+```
+
+# dotplots of genotype effects on cell type proportions
+
+
+```{r}
+dotplot_df = imap_dfr(p_list, function(pmat, tp) {
+  cmat = coef_list[[tp]]
+  as_tibble(pmat, rownames="genotype") %>%
+    pivot_longer(-genotype, names_to="cell_type", values_to="pval") %>%
+    left_join(
+      as_tibble(cmat, rownames="genotype") %>%
+        pivot_longer(-genotype, names_to="cell_type", values_to="coef"),
+      by = c("genotype","cell_type")
+    ) %>%
+    mutate(time_point = tp,
+           neglog10_p  = -log10(pval))
+})
+
+dotplot_df = dotplot_df %>%
+  mutate(time_point = factor(time_point,
+                             levels = c("D3","D7","D11","D18"),
+                             ordered = TRUE))
+
+```
+
+```{r coef-dotplot-tp,fig.height=9,fig.width=6}
+
+
+
+
+dotplot_list = map(c("D3","D7","D11","D18"), function(tp) {
+
+  
+  coef_mtx = coef_list[[tp]]
+
+  genotype_order = rownames(coef_mtx)[ htmap_list[[tp]]$tree_row$order ]
+  
+  df_tp = filter(dotplot_df, time_point == tp) |>
+           mutate(
+             genotype  = factor(genotype,
+                                levels = genotype_order,
+                                ordered = TRUE),
+             cell_type = factor(cell_type,
+                                levels = celltype_orders,
+                                ordered = TRUE)
+           ) |>
+           drop_na(genotype, cell_type)      # drops cell types not present
+  ggplot(df_tp,
+         aes(cell_type, genotype,
+             size  = neglog10_p,
+             color = coef)) +
+    geom_point() +
+    scale_size(range = c(0.5, 6),
+               name  = expression(-log[10]~italic(p))) +
+    scale_color_gradient2(low      = "#2166AC",
+                          mid      = "white",
+                          high     = "#B2182B",
+                          midpoint = 0,
+                          name     = "Coef") +
+    labs(title = tp, x = NULL, y = NULL) +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),
+          plot.title  = element_text(hjust = 0.5))
+})
+names(dotplot_list) = c("D3","D7","D11","D18")
+dotplot_list
+
+for(tp in names(dotplot_list)){
+  
+ggsave(file.path(out_dir, paste0("coefs_dotplots/", tp, ".png",sep='')),
+               plot     = dotplot_list[[tp]],
+              width = 6,height = 9,
+              unit = "in",
+               dpi      = 300)
+}
+
+pdf(file.path(out_dir,"coefs_dotplots/coefs_dotplots.pdf"), width = 6, height = 9)
+for(tp in names(dotplot_list)){
+  print(dotplot_list[[tp]])
+}
+dev.off()
+```
+```{r coef-dotplot-all,fig.height=6,fig.width=5.5}
+
+
+# take the order from the heat-map dendrogram of *one* reference TP.
+genotype_order = rownames(coef_list[["D18"]])[ htmap_list[["D18"]]$tree_row$order ]
+
+tp_levels      = levels(dotplot_df$time_point)
+tp_ct_levels = unlist(
+  lapply(tp_levels, \(tp) paste(tp, celltype_orders, sep = "_"))
+)
+
+plot_df = dotplot_df %>% 
+  mutate(genotype = factor(genotype,
+                           levels  = genotype_order,
+                           ordered = TRUE),
+         tp_ct  = factor(paste(time_point, cell_type, sep = "_"),
+                           levels  = tp_ct_levels,
+                           ordered = TRUE)) %>% 
+  drop_na(genotype, tp_ct)
+
+dotplot = plot_df%>%
+  ggplot(aes(x = tp_ct,         
+           y = genotype,
+           size  = neglog10_p,
+           colour = coef)) +
+  geom_point() +
+  scale_size(range = c(0.3, 4),
+             name  = expression(-log[10]~italic(p))) +
+  scale_colour_gradient2(low = "#2166AC",
+                         mid = "white",
+                         high = "#B2182B",
+                         midpoint = 0,
+                         name = "Coef") +
+  labs(x = NULL, y = NULL) +
+  theme_bw(base_size = 8) + 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+        panel.grid.major.x = element_blank(),      # optional: declutter grid
+        plot.title = element_text(hjust = 0.5))
+dotplot
+  
+ggsave(file.path(out_dir,"coefs_dotplots/all.png"),
+               plot  = dotplot,
+              width = 5.5,height = 6,
+              unit = "in",
+               dpi      = 300)
+
+```
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```

@@ -1,0 +1,867 @@
+---
+title: "PCA and Variance Decomposition"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+---
+
+
+# libraries
+
+```{r load_libraries, warning = FALSE, message = FALSE}
+library(Seurat)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+library(cowplot)  
+library(patchwork)
+library(stringr)
+library(pheatmap)
+library(reshape2)
+library(readxl)
+library(stringr)
+library(DESeq2)
+library(gridExtra)
+library(ggrepel)
+library(ggpubr)
+library(tidyverse)
+library(viridisLite)
+
+theme_set(theme_classic())
+
+
+data_dir = "/home/zli4/MSK_DEC24/Analysis"
+
+out_dir = "/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/anova"
+
+
+```
+
+
+
+
+# load data
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+```
+
+```{r}
+
+
+# remove cells without cell type annotations
+keep.cells= rownames(integrated@meta.data)[
+  !is.na(integrated@meta.data$celltype)
+]
+
+integrated= subset(
+  integrated,
+  cells = keep.cells
+)
+integrated$celltype = as.factor(integrated$celltype)
+summary(integrated$celltype)
+```
+
+## order cell types
+
+```{r}
+celltype_orders = c(
+  "ESC",
+  "ESC_DE",
+  "DE",
+  "PFG",
+  "PGT",
+  "PP",
+  "EnP",
+  "SC-EC",
+  "SC-alpha",
+  "SC-beta",
+  "SC-delta",
+  "Ductal",
+  "Mesenchymal_Stromal",
+  "Stromal",
+  "Endothelial",
+  "Liver"
+)
+
+integrated$celltype = factor(integrated$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+
+celltype_palette = readRDS("/fh/fast/sun_w/zhaoheng_li/MSK_DEC24/Analysis/outs/celltype_palette.RDS")
+
+```
+
+
+
+# split seurat object by time points
+
+
+```{r}
+obj = integrated%>%subset(subset = time_point%in%c("D-1","D3","D7","D11","D18"))
+
+obj$time_point = droplevels(obj$time_point)
+summary(obj$time_point)
+
+obj_list = SplitObject(obj, split.by = "time_point")
+obj_list
+```
+
+
+# create pseudobulk samples
+
+
+```{r }
+f_pseudobulk_list = file.path(out_dir,"pseudobulk_list.RDS")
+
+if(file.exists(f_pseudobulk_list)){
+  pseudo_obj_list  = readRDS(f_pseudobulk_list)
+}else{
+  pseudo_obj_list = list()
+  for(tp in c("D-1","D3","D7","D11", "D18")){
+    obj = obj_list[[tp]]
+  
+    obj$celltype = as.factor(obj$celltype)
+    obj$background = as.factor(obj$background)
+    obj$genotype = as.factor(obj$genotype)
+    levels(obj$celltype)=gsub("_","-",levels(obj$celltype)) # rename celltype levels
+    pseudo_obj = AggregateExpression(obj, assays = "RNA", return.seurat = T,
+                                      group.by = c("sample_name","feature.4", "celltype"))
+    
+    pseudo_obj$sample_name = gsub("-","_",pseudo_obj$sample_name)
+    
+    # process metadata
+    pseudo_meta = pseudo_obj[[]]
+    pseudo_meta$pseudo.sample.id = pseudo_meta$orig.ident
+    obj$pseudo.sample.id = as.factor(paste(obj$sample_name,obj$feature.4,obj$celltype,sep='_'))
+    obj$pseudo.sample.id = gsub("-","_", obj$pseudo.sample.id)
+    pseudo_meta$pseudo.sample.id = gsub("-","_",rownames(pseudo_meta))
+    pseudo_meta = pseudo_meta %>%
+                            left_join(obj[[]]%>%select(pseudo.sample.id,genotype,source,background)%>%distinct(), 
+                                           by = c("pseudo.sample.id"))
+    pseudo_meta$celltype = as.factor(pseudo_meta$celltype)
+    pseudo_meta$genotype = as.factor(pseudo_meta$genotype)
+  
+    n_df=obj[[]]%>%dplyr::count(pseudo.sample.id) 
+    pseudo_meta = pseudo_meta%>%left_join(n_df)
+    rownames(pseudo_meta) = pseudo_meta$orig.ident
+    pseudo_obj@meta.data = pseudo_meta
+    
+    pseudo_obj$celltype = as.character( pseudo_obj$celltype)
+    pseudo_obj$celltype = ifelse(pseudo_obj$celltype == 'ESC-DE','ESC_DE',
+                                 ifelse(pseudo_obj$celltype == 'Mesenchymal-Stromal','Mesenchymal_Stromal',pseudo_obj$celltype ))
+    pseudo_obj$celltype = as.factor(pseudo_obj$celltype)
+    pseudo_obj$genotype = as.factor(pseudo_obj$genotype)
+    pseudo_obj_list[[tp]] = pseudo_obj
+  }
+  names(pseudo_obj_list) = c("D-1","D3","D7","D11", "D18")
+  saveRDS(pseudo_obj_list,f_pseudobulk_list)
+}
+
+
+```
+
+```{r}
+
+pseudo_obj_list = lapply(pseudo_obj_list,function(pseudo_obj){
+  pseudo_obj$celltype = factor(pseudo_obj$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+  pseudo_obj
+})
+
+
+
+```
+
+
+# remove pseudobulk samples with < 30 cells
+
+```{r}
+min_cells = 30
+
+
+pseudo_obj_list = lapply(pseudo_obj_list,function(pseudo_obj){
+  pseudo_obj%>%subset(subset = n>=min_cells)
+})
+pseudo_obj_list
+```
+
+
+
+
+# feature selection for PCA
+
+> for each time point, use top 5000 highly variable genes (HVGs)
+
+
+
+```{r pca-features,fig.width = 10, fig.height = 12, warning=FALSE,message=FALSE}
+
+
+pca_features = list()
+for(tp in c("D-1","D3","D7","D11","D18")){
+  pseudo_obj = pseudo_obj_list[[tp]]
+
+  pseudo_obj = FindVariableFeatures(pseudo_obj,nfeatures = 5000)
+  pca_features[[tp]] = VariableFeatures(pseudo_obj)
+  pseudo_obj = ScaleData(pseudo_obj,verbose = F)
+  pseudo_obj=RunPCA(pseudo_obj,npcs = min(50,ncol(pseudo_obj)-1),verbose = F)
+
+  pve <- (pseudo_obj[["pca"]]@stdev)^2            # eigen-values (= variance of each PC)
+  pve <- pve / sum(pve)                           # proportion of total variance
+  pc_labs = function(i) sprintf("PC%d (%.1f%%)", i, 100 * pve[i])
+
+  df = as.data.frame(cbind(Embeddings(pseudo_obj, reduction = "pca")[,1:2],pseudo_obj[[]]))
+  df$celltype = factor(df$celltype,
+                              levels =celltype_orders ,
+                              ordered = TRUE)
+  df$celltype = droplevels(df$celltype)
+
+  # set shapes
+  shape_values <- c(16, 17, 15, 3, 7, 8, 18, 0, 1, 2)
+  shape_values = shape_values[1:length(unique(df$celltype))]
+  names(shape_values) <- unique(df$celltype)
+  
+  fig1 <- ggplot(df, aes(x     = PC_1,
+                        y     = PC_2,
+                        color = celltype,
+                        shape = celltype)) +
+    geom_point(size  = 1,
+               alpha = 0.8) +                 # 80% opacity
+    scale_shape_manual(values = shape_values) +  # assign each celltype its own shape
+    labs(
+      title = "",
+      x     = pc_labs(1),
+      y     = pc_labs(2),
+      color = "cell type",
+      shape = "cell type"
+    ) +
+    scale_color_manual(
+      values = celltype_palette,   
+      drop   = TRUE                
+    )+
+    theme_classic()+
+    guides(
+      color = guide_legend(
+        override.aes = list(size = 4)  # Increase legend point size
+      )
+    )
+
+
+  fig2 = df%>%ggplot(aes(x=PC_1,y=PC_2,color = n))+
+    geom_point(size=1)+
+    viridis::scale_color_viridis()+
+    labs(
+      title = "",
+      x     = pc_labs(1),
+      y     = pc_labs(2),
+     color  = "# cells"
+    )+
+    theme_classic()
+  
+  fig3 = df%>%ggplot(aes(x=PC_1,y=PC_2,color = background))+
+    geom_point(size=1)+
+    labs(
+      title = "",
+      x     = pc_labs(1),
+      y     = pc_labs(2),
+    )+
+    theme_classic()+
+    guides(
+      color = guide_legend(
+        override.aes = list(size = 4)  # Increase legend point size
+      )
+    )
+  fig4 = df%>%ggplot(aes(x=PC_1,y=PC_2,color = source))+
+    geom_point(size=1)+
+    labs(
+      title = "",
+      x     = pc_labs(1),
+      y     = pc_labs(2),
+    )+
+    theme_classic()+
+    guides(
+      color = guide_legend(
+        override.aes = list(size = 4)  # Increase legend point size
+      )
+    )
+  fig5 = df%>%ggplot(aes(x=PC_1,y=PC_2,color = genotype,shape=background,label=feature.4))+
+    geom_point(size=1)+
+    ggrepel::geom_text_repel(aes(label = feature.4),size =2) +
+    labs(
+      title = "",
+      x     = pc_labs(1),
+      y     = pc_labs(2),
+    )+
+    theme_classic()+
+    theme(legend.position = "none")
+  
+  fig = gridExtra::grid.arrange(
+        fig1, fig2, fig3, fig4, fig5,
+        layout_matrix = rbind(
+          c(1, 2),   # row-1
+          c(3, 4),   # row-2
+          c(5, 5)    # row-3  ← fig5 spans both columns
+        ),
+        heights = c(1, 1, 2)   # give fig5 double the row-height
+      )
+
+  ggsave(file.path(out_dir,paste0("pc_plots/",tp,".png",sep='')),fig,width = 10,height = 12)
+}
+if(file.exists( file.path(out_dir,"pca_features.RDS"))){
+  pca_features = readRDS(file.path(out_dir,"pca_features.RDS"))
+}else{
+  saveRDS(pca_features,file.path(out_dir,"pca_features.RDS"))
+}
+
+```
+
+# Analysis
+
+```{r}
+
+for(tp in c("D-1","D3","D7","D11","D18")){
+    obj = pseudo_obj_list[[tp]]
+    # filter genotypes
+    obj$genotype = as.factor(obj$genotype)
+    tmp = obj[[]]%>%select(genotype,feature.4)%>%distinct()
+    obj = obj%>%subset(subset = genotype%in%names(which(summary(tmp$genotype)>=2)))
+    obj$genotype = droplevels(obj$genotype)
+    pseudo_obj_list[[tp]] = obj
+}
+```
+
+```{r nested-model, warning = F, message= F}
+
+for(tp in c("D-1","D3","D7","D11","D18")){
+  if(!file.exists(file.path(out_dir,paste0(tp,"_pseudo_lm_res.RDS",sep='')))){
+    features = pca_features[[tp]] # time-point specific HVGs
+    print(length(features))
+    print(tp)
+    obj = pseudo_obj_list[[tp]]
+    
+    # filter genotypes
+    obj$genotype = as.factor(obj$genotype)
+    tmp = obj[[]]%>%select(genotype,feature.4)%>%distinct()
+    obj = obj%>%subset(subset = genotype%in%names(which(summary(tmp$genotype)>=2)))
+    obj$genotype = droplevels(obj$genotype)
+    
+    meta = obj[[]]%>%dplyr::select(source,background,celltype,genotype,feature.4)
+    meta$celltype = as.factor(meta$celltype)
+    dat = GetAssayData(obj,layer='data')[features,]
+    counts = GetAssayData(obj,layer='counts')[features,]
+    rd=colSums(counts)
+    meta$rd = rd
+    
+    meta$genotype = as.factor( meta$genotype) # include genotypes with only 1 clones
+    meta$sample = rownames(meta)
+    summary( meta$genotype)
+    
+    meta$genotype = relevel( meta$genotype,ref="WT")
+    genotype_mtx =model.matrix(~ genotype,  meta) # craete dummy variables
+    colnames(genotype_mtx)[1] = "genotype_ref"
+    genotype_mtx = as.data.frame(genotype_mtx)
+    genotype_mtx$sample = rownames(genotype_mtx)
+    
+    meta = meta%>%left_join(genotype_mtx,by = join_by(sample))
+    
+    if(tp=="D-1"){ # handle D-1 data
+      df= parallel::mclapply(features,function(g){
+        y_df = meta; y_df$y = dat[g,]
+        mod0 = lm(y~rd,data=y_df)
+        mod1 = lm(y~rd+source,data=y_df)
+        mod2 = lm(y~rd+source+background,data=y_df)
+        mod3 = mod2
+        r2 = c(summary(mod0)$r.squared,
+               summary(mod1)$r.squared-summary(mod0)$r.squared, # data source
+               summary(mod2)$r.squared-summary(mod1)$r.squared, # cell background
+               NA)
+        names(r2) = c("read-depth","data-source","cell-background","cell-type")
+        
+        genotype_KO = setdiff(levels(meta$genotype),"WT")
+        genotype_r2 = rep(NA,length(genotype_KO));names(genotype_r2) = genotype_KO
+        genotype_pval = rep(NA,length(genotype_KO));names(genotype_pval) = paste("pval",genotype_KO,sep="_")
+        for(geno in genotype_KO){
+          # full model
+          df0 = y_df%>%dplyr::select(-feature.4,-genotype,-genotype_ref,-sample,-celltype) 
+          mod_full = lm(y~.,data = df0)
+          v = as.symbol(paste0("genotype",geno))
+          # remove genotype of interest
+          df1 = y_df%>%dplyr::select(-feature.4,-genotype,-genotype_ref,-sample,-paste0("genotype",geno),-celltype) 
+          mod4 = lm(y~.,data = df1)
+          genotype_r2[geno] = summary(mod_full)$r.squared-summary(mod4)$r.squared
+          genotype_pval[paste("pval",geno,sep="_")] = summary(mod_full)$coefficients[setdiff( names(mod_full$coefficients), names(mod4$coefficients)),"Pr(>|t|)"]
+        }
+        res = c(r2,genotype_r2,genotype_pval)
+        return(res)
+      },mc.cores = 20)
+    }else{
+      tictoc::tic()
+      df= parallel::mclapply(features,function(g){
+        y_df = meta; y_df$y = dat[g,]
+        mod0 = lm(y~rd,data=y_df)
+        mod1 = lm(y~rd+source,data=y_df)
+        mod2 = lm(y~rd+source+background,data=y_df)
+        mod3 = lm(y~rd+source+background+celltype,data=y_df)
+        r2 = c(summary(mod0)$r.squared,
+               summary(mod1)$r.squared-summary(mod0)$r.squared, # data source
+               summary(mod2)$r.squared-summary(mod1)$r.squared, # cell background
+               ifelse(summary(mod3)$r.squared-summary(mod2)$r.squared==0,NA,summary(mod3)$r.squared-summary(mod2)$r.squared))
+        names(r2) = c("read-depth","data-source","cell-background","cell-type")
+        
+        genotype_KO = setdiff(levels(meta$genotype),"WT")
+        genotype_r2 = rep(NA,length(genotype_KO));names(genotype_r2) = genotype_KO
+        genotype_pval = rep(NA,length(genotype_KO));names(genotype_pval) = paste("pval",genotype_KO,sep="_")
+        for(geno in genotype_KO){
+          # full model
+          df0 = y_df%>%dplyr::select(-feature.4,-genotype,-genotype_ref,-sample) 
+          mod_full = lm(y~.,data = df0)
+          v = as.symbol(paste0("genotype",geno))
+          # remove genotype of interest
+          df1 = y_df%>%dplyr::select(-feature.4,-genotype,-genotype_ref,-sample,-paste0("genotype",geno)) 
+          mod4 = lm(y~.,data = df1)
+          genotype_r2[geno] = summary(mod_full)$r.squared-summary(mod4)$r.squared
+          genotype_pval[paste("pval",geno,sep="_")] = summary(mod_full)$coefficients[setdiff( names(mod_full$coefficients), names(mod4$coefficients)),"Pr(>|t|)"]
+        }
+        res = c(r2,genotype_r2,genotype_pval)
+        return(res)
+      },mc.cores = 20)
+      tictoc::toc()
+    }
+    df=do.call("rbind", df)
+    rownames(df) = features
+    saveRDS(df,file.path(out_dir,paste0(tp,"_pseudo_lm_res.RDS",sep='')))
+  }
+}
+
+```
+
+
+# Heatmap of proportion variance explained for time-point-specific HVGs
+
+> only time-point specific HVGs with <75% percent zeros across cells are considered
+
+```{r,fig.height=8,fig.width=10}
+#pdf(paste(out_dir,"htmap.pdf",sep=''))
+for(tp in c("D-1","D3","D7","D11","D18")){
+  features_tp = pca_features[[tp]]
+  pseudo_obj = pseudo_obj_list[[tp]]
+  dat = GetAssayData(pseudo_obj)[features_tp,]
+  zero_prop = apply(dat,1,function(x){
+    sum(x==0)/length(x)
+  })
+  features_tp = features_tp[which(zero_prop<quantile(zero_prop,0.75))]
+
+  lm_res = readRDS(file.path(out_dir,paste0(tp,"_pseudo_lm_res.RDS",sep='')))
+  if(tp=="D-1"){
+    mtx=lm_res[,-c(4,which(startsWith(colnames(lm_res), "pval_")))]
+  }else{
+    mtx =lm_res[,-c(which(startsWith(colnames(lm_res), "pval_")))]
+  }
+  mtx = mtx[features_tp,] # keep on tp-specific genes
+  if(sum(is.na(rowSums(mtx)))!=0){
+      mtx=mtx[-which(is.na(rowSums(mtx))),]
+  }
+  pvals = lm_res[,which(startsWith(colnames(lm_res), "pval_"))]
+  pvals=pvals[rownames(mtx),]
+  genotypes = sub(".*_", "", colnames(pvals))
+  for(g in rownames(mtx)){ # keep only r2 corresponding to significant coefficients
+    for(genotype in genotypes){
+      p = p.adjust(pvals[g,paste("pval",genotype,sep="_")], method = "fdr")
+      mtx[g,genotype] = ifelse(p<0.05,mtx[g,genotype],0)
+    }
+  }
+  print(dim(mtx))
+  
+   mtx = log10(mtx+10^{-12})
+   
+   
+   mtx0 = mtx
+   mtx0[which(mtx0<(-4))] = -4 # truncate
+   mtx0_sub = mtx0[,-(1:4)] # genotypes only
+   breaks = c(seq(min(mtx0),-1,length.out=30),seq(-1,max(mtx0),length.out=50)[-1])
+   breaks1 = c(seq(min(mtx0_sub),-1,length.out=30),seq(-1,max(mtx0_sub),length.out=50)[-1])
+   htmap = pheatmap::pheatmap(mtx0,main = paste(tp, ": log10(proportion var. explained)",sep=""),cluster_cols = F,scale = 'none',show_rownames=F,color=plasma(length(breaks) - 1),clustering_method = "ward.D")
+    print(htmap)
+  print(pheatmap::pheatmap(mtx0_sub,main = paste(tp, ": log10(proportion var. explained): genotypes",sep=""),scale = 'none',show_rownames=F,color=plasma(length(breaks1) - 1),clustering_method = "ward.D"))
+}
+```
+
+
+
+# check the numbers of pseudobulk samples for each cell type
+
+```{r}
+
+
+for(tp in c("D-1","D3","D7","D11","D18")){
+  pseudo_obj = pseudo_obj_list[[tp]]
+  pseudo_obj$celltype = droplevels(pseudo_obj$celltype)
+  print(summary(pseudo_obj$celltype))
+}
+
+
+```
+
+# aggregate results from all time points in to a long-format dataframe in long format
+
+
+```{r}
+
+mtx_lst = list()
+
+for(tp in c("D-1","D3","D7","D11","D18")){
+
+  features_tp = pca_features[[tp]]
+  pseudo_obj = pseudo_obj_list[[tp]]
+  dat = GetAssayData(pseudo_obj)[features_tp,]
+  zero_prop = apply(dat,1,function(x){
+    sum(x==0)/length(x)
+  }) 
+  features_tp = features_tp[which(zero_prop<quantile(zero_prop,0.75))]
+  lm_res = readRDS(file.path(out_dir,paste0(tp,"_pseudo_lm_res.RDS",sep='')))
+
+  if(tp=="D-1"){
+    mtx=lm_res[,-c(4,which(startsWith(colnames(lm_res), "pval_")))]
+  }else{
+    mtx =lm_res[,-c(which(startsWith(colnames(lm_res), "pval_")))]
+  }
+  mtx = mtx[features_tp,] # keep on tp-specific genes
+  if(sum(is.na(rowSums(mtx)))!=0){
+      mtx=mtx[-which(is.na(rowSums(mtx))),]
+  }
+  pvals = lm_res[,which(startsWith(colnames(lm_res), "pval_"))]
+  pvals=pvals[rownames(mtx),]
+  genotypes = sub(".*_", "", colnames(pvals))
+  
+  print(dim(mtx))
+  
+   mtx = log10(mtx+10^{-12}) 
+   
+  # for each gene, adjust genotype p-valus by FDR
+  # keep only r2 corresponding to significant coefficients
+  for(g in rownames(mtx)){ 
+    for(genotype in genotypes){
+      p = p.adjust(pvals[g,paste("pval",genotype,sep="_")], method = "fdr")
+      mtx[g,genotype] = ifelse(p<0.05,mtx[g,genotype],-Inf)
+    }
+  }
+    
+   df = as.data.frame(mtx)
+   df$time = tp
+   df$gene = rownames(df)
+   mtx_lst[[tp]] = df
+}
+
+# enforce all matrices have the same columns
+names = unique(unlist(sapply(mtx_lst,function(df){
+  colnames(df)
+})))
+mtx_lst = lapply(mtx_lst,function(df){
+  df[,setdiff(names,colnames(df))] = NA
+  return(df[,names])
+})
+
+df = do.call(rbind,mtx_lst)
+
+df_long = reshape2::melt(df, id.vars = c("time","gene"), variable.name = "Factor", value.name = "Value")
+df_long$time = factor(df_long$time,levels = c("D-1","D3","D7","D11","D18"))
+
+df_long[1:2,]
+
+```
+
+
+#  Check the number of cell types that occur in at least two genotypes at each time point
+
+```{r}
+for(tp in c("D3","D7","D11","D18")){
+  
+  print(tp)
+  pseudo_obj = pseudo_obj_list[[tp]]
+  
+  # remove cell types that only occur in one genotype
+  df= pseudo_obj[[]]
+  idx = (df%>%
+           group_by(celltype)%>%
+           summarise(n_distinct(genotype)))[,2]>=1 
+  celltypes = (df%>%group_by(celltype)%>%summarise(n_distinct(genotype)))[,1][idx]
+  pseudo_obj = pseudo_obj%>%subset(subset = celltype%in%celltypes)
+  pseudo_obj$celltype = droplevels(pseudo_obj$celltype)
+  print(levels(pseudo_obj$celltype))
+}
+```
+
+# degree-of-freedom adjusted proportion of variance attributed to cell types
+
+> Proportion variance explained by cell type is adjusted by degree of freedom (number of cell types -1) in the panel "cell-type-scaled".
+
+```{r}
+df_long_scaled = df_long
+df_long_scaled$Value <- ifelse(df_long$time =="D3" & df_long$Factor == "cell-type", df_long_scaled$Value-log10(2), df_long_scaled$Value)
+df_long_scaled$Value <- ifelse(df_long$time =="D7" & df_long$Factor == "cell-type", df_long_scaled$Value-log10(4), df_long_scaled$Value)
+df_long_scaled$Value <- ifelse(df_long$time =="D11" & df_long$Factor == "cell-type", df_long_scaled$Value-log10(5), df_long_scaled$Value)
+df_long_scaled$Value <- ifelse(df_long$time =="D18" & df_long$Factor == "cell-type", df_long_scaled$Value-log10(9), df_long_scaled$Value)
+df_long_scaled = df_long_scaled%>%filter(Factor=='cell-type')
+df_long_scaled$Factor = 'cell-type-scaled'
+
+unique(df_long$Factor)
+```
+
+
+# Violin Plots summarizing proportions of variance explained by relavant factors at each time point
+
+
+```{r,fig.height=3,fig.width=6}
+
+
+df_long = rbind(df_long,df_long_scaled)
+fig1_scaled=df_long%>%filter(Factor%in%c("read-depth", "data-source",
+                                         "cell-background","cell-type","cell-type-scaled"))%>%
+  ggplot(aes(x = time,y =Value,color = time))+
+  geom_violin()+
+  geom_boxplot(width = 0.1, fill = "white", aes(color = time),outlier.size = 0.5) +  # Boxplot
+  ylab("log10(proportion \n variance explained)")+
+  xlab("")+
+  theme_bw()+
+   scale_color_brewer(palette = "Set1")+
+  guides(color="none")+
+  facet_wrap(~Factor)
+fig1_scaled
+
+
+ggsave(
+  filename = file.path(out_dir,"propVar_summary.png"),
+  plot     = fig1_scaled,
+  width    = 6,
+  height   = 3,
+  units    = "in",
+  dpi      = 300
+)
+```
+
+## truncate y-axis at -4
+
+> Same as above, except for truncating y-axis at -4
+
+```{r,fig.height=3,fig.width=6}
+fig1_scaled_truncated = df_long%>%
+  mutate(Value =  ifelse(df_long$Value<(-4),NA,df_long$Value))%>%
+  filter(Factor%in%c("read-depth","data-source","cell-background","cell-type","cell-type-scaled"))%>%
+  ggplot(aes(x = time,y =Value,color = time))+
+  geom_violin()+
+  geom_boxplot(width = 0.1, fill = "white", aes(color = time),outlier.size = 0.5) +  # Boxplot
+  ylab("log10(proportion \n variance explained)")+
+  xlab("")+
+  theme_bw()+
+   scale_color_brewer(palette = "Set1")+
+  guides(color="none")+
+  facet_wrap(~Factor)
+fig1_scaled_truncated
+
+ggsave(
+  filename = file.path(out_dir,"propVar_summary_truncated.png"),
+  plot     = fig1_scaled_truncated,
+  width    = 6,
+  height   = 3,
+  units    = "in",
+  dpi      = 300
+)
+
+```
+
+
+
+### Violin plots for proportion variance attributed to genotype
+
+> Only significant r-squares are kept for visualization.
+
+> Numbers on top indicates the number of genotypes incorporated in the analysis at each time point
+
+```{r}
+# subset data frame for genotype: include only genes with FDR<0.05
+df_long1 = df_long%>%
+  filter(!Factor%in%c("read-depth","data-source","cell-background","cell-type","cell-type-scaled"))
+  #mutate(Value =  ifelse(df_long1$Value<(-4),NA,df_long1$Value))
+df_long1$id = paste(df_long1$time,df_long1$Factor,sep="_")
+write.csv(df_long1,file.path(out_dir,"genotype_significant_propvar.csv"),row.names = FALSE)
+```
+
+
+```{r, fig.height=3,fig.width=6}
+
+# summarize the number of genotypes involved in the analysis for each day
+ann = df_long1 %>%
+  filter(!is.infinite(Value))%>%
+  group_by(time, Factor) %>%
+  summarise(
+    median = median(Value, na.rm = TRUE)
+  )%>%
+  ungroup()%>%
+  group_by(time)%>%
+  summarise(num_genotype = sum(!is.na(median)))
+
+fig2=df_long1 %>%
+  filter(!is.infinite(Value))%>%
+  group_by(time, Factor) %>%
+  summarise(
+    median = median(Value,na.rm=T)
+  )%>%ggplot(aes(x=time,y=median,color = time))+
+  geom_violin()+
+  geom_boxplot(width = 0.1, aes(color = time)) +  # Boxplot within violin, without outliers
+   geom_text(data =ann, 
+  aes(x = time, y =-1, label = num_genotype), 
+            size = 3, color = "black")+
+  ylab( "medians of \n log10(proportion \n variance explained)") +
+  xlab("")+
+  ggtitle("all available genotypes")+
+    scale_color_brewer(palette = "Set1")+
+  guides(color = "none")+
+  theme_bw()
+
+fig2
+
+ggsave(
+  filename = file.path(out_dir,"genotype_median_summary.png"),
+  plot     = fig2,
+  width    = 6,
+  height   = 3,
+  units    = "in",
+  dpi      = 300
+)
+```
+
+# proportion explained by individual genotypes
+
+## compute the proportion of genes with significant proportion variance explained by each genotype at each time point
+
+```{r}
+significant_prop <- df_long1 %>%
+  group_by(time, Factor) %>%
+  summarise(
+    total = n(),
+    value_count = sum((!is.infinite(Value))),
+    prop= value_count / total
+  )
+# prop = 1 only happens when the genotype is not included in the analysis (didn't pass filtering criteria)
+significant_prop = significant_prop%>%filter(prop!=1)
+significant_prop$id = paste(significant_prop$time,significant_prop$Factor,sep="_")
+```
+
+
+## time-point specific violin plots for each genotype
+
+> Plot significant proportion variance explained by each genotype at each time point with the proportion of genes with significant proportion variance explained by the genotype
+
+```{r,fig.height=10,fig.width=10}
+summary((df_long1%>%
+ filter(!is.infinite(Value)))$Value)
+
+value_range <- range((df_long1%>%
+  filter(!is.infinite(Value)))$Value, na.rm = TRUE)
+
+# Find the range of the proportion of non-NA values
+prop_range <- c(0,0.3) #range(significant_prop$prop[significant_prop$prop!=1], na.rm = TRUE)
+
+# Create the plot
+fig3=df_long1%>%
+  filter(!is.infinite(Value))%>%
+  ggplot(aes(x = time, y = Value)) +
+  geom_violin(trim = T, alpha = 0.5) +  # Violin plot
+  geom_boxplot(width = 0.1,outlier.size = 0.5) +  # Boxplot within violin, without outliers
+  geom_point(data = significant_prop%>%filter(prop!=1), 
+             aes(x = time, y = (prop - min(prop_range)) / diff(prop_range) * diff(value_range) + min(value_range)),
+             color = 'maroon',shape=8,size = 1, position = position_dodge(width = 0.9)) +  # Points for proportion of non-NA values scaled to the primary y-axis
+  scale_y_continuous(
+    sec.axis = sec_axis(~ (. - min(value_range)) / diff(value_range) * diff(prop_range) + min(prop_range), name = "Proportion of genes with FDR<0.05")
+  ) +
+  theme_bw() +
+  labs(x = "",
+       y = "log10(proportion variance explained)") +
+  facet_wrap(~Factor)
+fig3
+
+ggsave(
+  filename = file.path(out_dir,"genotype_timepoint_propVar.png"),
+  plot     = fig3,
+  width    = 10,
+  height   = 10,
+  units    = "in",
+  dpi      = 300
+)
+
+```
+
+
+## proportion of genes with significant proportion variance explained
+
+> Missing point means that at that time point the genotype is not tested due to the lack of sufficient pseudobulk samples
+
+```{r,fig.height=8,fig.width=10}
+fig4 = significant_prop%>%
+  filter(prop!=1)%>%
+  ggplot(aes(x=time,y=prop,group = Factor,color = Factor))+
+  geom_point()+
+  geom_line()+
+  ylab("proportion of genes with FDR<0.05")+
+  theme_bw()+
+   theme(legend.position = "none")+
+  facet_wrap(~Factor)
+fig4
+ggsave(
+  filename = file.path(out_dir,"genotype_proportionSignificant.png"),
+  plot     = fig4,
+  width    = 10,
+  height   = 8,
+  units    = "in",
+  dpi      = 300
+)
+```
+
+
+
+### summarize across genotypes
+
+```{r,fig.height=4,fig.width=8}
+fig5 = significant_prop%>%
+  filter(prop!=1)%>%
+  ggplot(aes(x = time,y=prop,color = time))+
+   geom_violin(trim = T, alpha = 0.5) +  # Violin plot
+  geom_boxplot(width = 0.1,outlier.size = 0.5,aes(color = time)) + 
+  xlab("")+
+  ylab("median proportion of genes with FDR<0.05")+
+   guides(color="none")+
+  theme_bw()
+fig5
+ggsave(
+  filename = file.path(out_dir,"celltype_prop_time.png"),
+  plot     = fig5,
+  width    = 8,
+  height   = 4,
+  units    = "in",
+  dpi      = 300
+)
+
+
+```
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```
+

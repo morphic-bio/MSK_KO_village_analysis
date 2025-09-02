@@ -1,0 +1,355 @@
+---
+title: "Process Data"
+author: "Zhaoheng Li, Wei Sun"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    theme: journal
+    highlight: tango
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: false
+    number_sections: false
+  df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R library and data input
+
+```{r load_libraries, warning = FALSE, message = FALSE}
+library(Seurat)
+library(Matrix)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(tibble)
+library(cowplot)  
+library(patchwork)
+library(stringr)
+library(pheatmap)
+library(reshape2)
+library(readxl)
+library(stringr)
+library(DESeq2)
+library(gridExtra)
+library(ggrepel)
+library(ggpubr)
+
+
+theme_set(theme_classic())
+
+data_dir = "/fh/working/sun_w/zli/MSK_DEC24/data2/output"
+meta_dir = "/home/zli4/MSK_DEC24/metadata"
+output_dir = "/home/zli4/MSK_DEC24/Analysis"
+
+setwd(output_dir)
+```
+
+
+
+# Read in Seurat objects
+
+```{r}
+integrated = readRDS(file.path(data_dir,"integrated-rpca_BDF-ref.RDS"))
+dim(integrated)
+```
+
+
+# Read in meta data
+
+```{r}
+combined= read.csv(file.path(meta_dir,"metadata_annotated_corrected_KO_Apr30.csv"))
+meta = read.csv(file.path(meta_dir,"MSK_KO_village_meta_data.csv"))
+v0 = read.csv(file.path(meta_dir,"meta_combined_v0.csv"))
+```
+
+
+```{r}
+meta%>%filter(celltype=="ESC")%>%group_by(sample_name,feature.4)%>%summarize(n()) # almost all ESC cells are KO villageg samples
+```
+
+
+```{r}
+
+a1 = v0%>%filter(sgrna=="70_1_NGN3")%>%pull(barcode)
+a2 = v0%>%filter(sgrna=="70_2_NGN3")%>%pull(barcode)
+
+b1 = rownames( integrated[[]]%>%filter(feature.4=='70_NGN3'))
+b2 = rownames( integrated[[]]%>%filter(feature.4=='70_NGN3-alt1'))
+library(VennDiagram)
+library(grid)   # for grid.newpage()
+
+# put your vectors into a named list
+sets = list(
+  `70_1_NGN3` = a1,
+  `70_2_NGN3` = a2,
+  `70_NGN3` = b1,
+  `70_NGN3-alt1` = b2
+)
+
+# build the diagram
+venn_plot = venn.diagram(
+  x          = sets,
+  filename   = NULL,           # NULL so it returns a grob, not a file
+  fill       = c("#D55E00", "#0072B2", "#009E73", "#CC79A7"),
+  alpha      = 0.4,
+  cex        = 1.2,            # count label size
+  cat.cex    = 1.4,            # set name label size
+  cat.dist   = 0.05,           # distance of set names from circles
+  margin     = 0.1
+)
+
+grid.newpage()
+grid.draw(venn_plot)
+```
+```{r}
+
+a1 = v0%>%filter(sgrna=="12_1_PAX6")%>%pull(barcode)
+a2 = v0%>%filter(sgrna=="12_2_PAX6")%>%pull(barcode)
+
+b1 = rownames( integrated[[]]%>%filter(feature.4=='12_PAX6'))
+b2 = rownames( integrated[[]]%>%filter(feature.4=='12_PAX6-alt1'))
+library(VennDiagram)
+library(grid)   # for grid.newpage()
+
+# put your vectors into a named list
+sets = list(
+  `12_1_PAX6` = a1,
+  `12_2_PAX6` = a2,
+  `12_PAX6` = b1,
+  `12_PAX6-alt1` = b2
+)
+
+# build the diagram
+venn_plot = venn.diagram(
+  x          = sets,
+  filename   = NULL,           # NULL so it returns a grob, not a file
+  fill       = c("#D55E00", "#0072B2", "#009E73", "#CC79A7"),
+  alpha      = 0.4,
+  cex        = 1.2,            # count label size
+  cat.cex    = 1.4,            # set name label size
+  cat.dist   = 0.05,           # distance of set names from circles
+  margin     = 0.1
+)
+
+grid.newpage()
+grid.draw(venn_plot)
+```
+```{r}
+combined%>%filter(genotype=='PAX6')%>%pull(sgrna)%>%unique()
+```
+
+
+```{r}
+# process genotype =='het'
+
+combined%>%filter(genotype =='het')%>%pull(sgrna)%>%unique()
+combined = combined %>%
+  mutate(
+    genotype = if_else(genotype == "het",
+                       "NANOGehet",
+                       genotype)
+  )
+
+# process genotype name
+combined = combined %>%
+  mutate(
+    sgrna = str_replace_all(
+      sgrna,
+      fixed("NANOGe_het"),    # look for the exact substring
+      "NANOGehet"             # replace with this
+    )
+  )
+
+# process cell type name
+meta = meta%>%
+   mutate(
+     celltype = if_else(celltype == "SC_enterchromaffin",
+                        "SC-EC",
+                        celltype))
+
+
+```
+
+
+```{r}
+# check sgrna ids that are not shared 
+unique(integrated$feature.4)[!(unique(integrated$feature.4)%in%unique(combined$sgrna))]
+```
+
+```{r}
+unique(combined$sgrna)[grepl("PAX6", unique(combined$sgrna))]
+unique(integrated$feature.4)[grepl("PAX6",unique(integrated$feature.4))]
+```
+
+```{r}
+unique(combined$sgrna)[grepl("NGN3", unique(combined$sgrna))]
+unique(integrated$feature.4)[grepl("NGN3",unique(integrated$feature.4))]
+```
+
+
+
+
+```{r}
+
+a1 = sub("*_.", "",combined%>%filter(sgrna=="70_1_NGN3")%>%pull(X))
+a2 = sub("*_.", "",combined%>%filter(sgrna=="70_2_NGN3")%>%pull(X))
+
+b1 = sub(".*_", "",rownames( integrated[[]]%>%filter(feature.4=='70_NGN3')))
+b2 = sub(".*_", "",rownames( integrated[[]]%>%filter(feature.4=='70_NGN3-alt1')))
+library(VennDiagram)
+library(grid)   # for grid.newpage()
+
+# put your vectors into a named list
+sets = list(
+  `70_1_NGN3` = a1,
+  `70_2_NGN3` = a2,
+  `70_NGN3` = b1,
+  `70_NGN3-alt1` = b2
+)
+
+# build the diagram
+venn_plot = venn.diagram(
+  x          = sets,
+  filename   = NULL,           # NULL so it returns a grob, not a file
+  fill       = c("#D55E00", "#0072B2", "#009E73", "#CC79A7"),
+  alpha      = 0.4,
+  cex        = 1.2,            # count label size
+  cat.cex    = 1.4,            # set name label size
+  cat.dist   = 0.05,           # distance of set names from circles
+  margin     = 0.1
+)
+
+grid.newpage()
+grid.draw(venn_plot)
+```
+
+
+
+```{r}
+a1 = sub("*_.", "",combined%>%filter(sgrna=="12_1_PAX6")%>%pull(X))
+a2 = sub("*_.", "",combined%>%filter(sgrna=="12_2_PAX6")%>%pull(X))
+
+b1 = sub(".*_", "",rownames( integrated[[]]%>%filter(feature.4=='12_PAX6')))
+b2 = sub(".*_", "",rownames( integrated[[]]%>%filter(feature.4=='12_PAX6-alt1')))
+
+library(VennDiagram)
+library(grid)   # for grid.newpage()
+
+# put your vectors into a named list
+sets = list(
+  `12_1_PAX6` = a1,
+  `12_2_PAX6` = a2,
+  `12_PAX6` = b1,
+  `12_PAX6-alt1` = b2
+)
+
+# build the diagram
+venn_plot = venn.diagram(
+  x          = sets,
+  filename   = NULL,           # NULL so it returns a grob, not a file
+  fill       = c("#D55E00", "#0072B2", "#009E73", "#CC79A7"),
+  alpha      = 0.4,
+  cex        = 1.2,            # count label size
+  cat.cex    = 1.4,            # set name label size
+  cat.dist   = 0.05,           # distance of set names from circles
+  margin     = 0.1
+)
+
+grid.newpage()
+grid.draw(venn_plot)
+```
+
+
+```{r}
+combined = combined %>%
+  mutate(
+    sgrna = case_when(
+      sgrna == "12_1_PAX6" ~ "12_PAX6",
+      sgrna == "12_2_PAX6" ~ "12_PAX6-alt1",
+      sgrna == "70_1_NGN3" ~ "70_NGN3",
+      sgrna == "70_2_NGN3" ~ "70_NGN3-alt1",
+      TRUE                 ~ sgrna   # leave all others unchanged
+    )
+  )
+```
+
+```{r}
+# all sgrna ids can be matched
+unique(integrated$feature.4)[!(unique(integrated$feature.4)%in%unique(combined$sgrna))]
+```
+
+
+```{r}
+# injective mappin gbetween sgrna and background
+sum(rowSums(table(combined$sgrna, combined$background)!=0)>1)
+```
+
+```{r}
+
+# join
+meta = meta%>%left_join(combined%>%select(sgrna,genotype,background) %>% distinct(),join_by("feature.4"=="sgrna"))
+
+meta$genotype = as.factor(meta$genotype )
+meta$background = as.factor(meta$background)
+summary(meta$genotype)
+summary(meta$background )
+# set rownames
+rownames(meta) = meta$barcode
+
+# add to Seurat object
+stopifnot(all(rownames(meta) == colnames(integrated)))
+
+integrated@meta.data = meta
+```
+
+
+
+```{r}
+# sort time poinnt levels in order
+integrated$time_point = as.factor(integrated$time_point)
+summary(integrated$time_point)
+tp <- unique(integrated$time_point)
+nums <- as.numeric(sub("^D", "", tp))
+ordered_lvls <- paste0("D", sort(nums))
+integrated$time_point <- factor(integrated$time_point,
+                          levels = ordered_lvls,
+                          ordered = TRUE)
+
+summary(integrated$time_point)
+
+```
+
+```{r}
+# hanlde WT genotypes
+integrated$genotype0 =  integrated$genotype
+integrated$genotype = if_else(integrated$genotype%in%c("WT","WT111","WT4"),
+                       "WT",
+                       integrated$genotype)
+
+# merge samples
+integrated$sample_name0 =  integrated$sample_name
+integrated$sample_name = ifelse(integrated$sample_name%in%c("G_1","G_2"),
+                       "G",
+                       ifelse(integrated$sample_name%in%c("L_1","L_2"),
+                        "L",integrated$sample_name
+                       ))
+unique(integrated$sample_name )                
+```
+
+```{r}
+saveRDS(integrated,file.path(output_dir,"integrated-rpca_BDF-ref_withMeta.RDS"))
+```
+
+
+# Session information
+
+```{r}
+gc()
+sessionInfo()
+```

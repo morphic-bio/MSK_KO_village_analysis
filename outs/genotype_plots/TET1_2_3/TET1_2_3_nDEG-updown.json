@@ -1,0 +1,230 @@
+{
+  "data": [
+    {
+      "orientation": "v",
+      "width": 0.44999999999999984,
+      "base": 0,
+      "x": [0.80000000000000004],
+      "y": [14],
+      "text": "celltype: ESC<br />n_DEGs: 14<br />direction: Up",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(215,48,39,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Up",
+      "legendgroup": "Up",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    },
+    {
+      "orientation": "v",
+      "width": 0.44999999999999984,
+      "base": 0,
+      "x": [1.2],
+      "y": [3],
+      "text": "celltype: ESC<br />n_DEGs:  3<br />direction: Down",
+      "type": "bar",
+      "textposition": "none",
+      "marker": {
+        "autocolorscale": false,
+        "color": "rgba(69,117,180,1)",
+        "line": {
+          "width": 1.8897637795275593,
+          "color": "transparent"
+        }
+      },
+      "name": "Down",
+      "legendgroup": "Down",
+      "showlegend": true,
+      "xaxis": "x",
+      "yaxis": "y",
+      "hoverinfo": "text",
+      "frame": null
+    }
+  ],
+  "layout": {
+    "margin": {
+      "t": 43.762557077625573,
+      "r": 7.3059360730593621,
+      "b": 25.570776255707766,
+      "l": 37.260273972602747
+    },
+    "plot_bgcolor": "rgba(255,255,255,1)",
+    "paper_bgcolor": "rgba(255,255,255,1)",
+    "font": {
+      "color": "rgba(0,0,0,1)",
+      "family": "",
+      "size": 14.611872146118724
+    },
+    "title": {
+      "text": "<b> TET1/2/3 vs WT <\/b>",
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 17.534246575342465
+      },
+      "x": 0.5,
+      "xref": "paper"
+    },
+    "xaxis": {
+      "domain": [0, 1],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [0.40000000000000002, 1.6000000000000001],
+      "tickmode": "array",
+      "ticktext": ["ESC"],
+      "tickvals": [1],
+      "categoryorder": "array",
+      "categoryarray": ["ESC"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -45,
+      "showline": false,
+      "linecolor": null,
+      "linewidth": 0,
+      "showgrid": true,
+      "gridcolor": "rgba(235,235,235,1)",
+      "gridwidth": 0.66417600664176002,
+      "zeroline": false,
+      "anchor": "y",
+      "title": {
+        "text": "",
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.611872146118724
+        }
+      },
+      "hoverformat": ".2f"
+    },
+    "yaxis": {
+      "domain": [0, 1],
+      "automargin": true,
+      "type": "linear",
+      "autorange": false,
+      "range": [-0.70000000000000007, 14.699999999999999],
+      "tickmode": "array",
+      "ticktext": ["0", "5", "10"],
+      "tickvals": [0, 5, 10],
+      "categoryorder": "array",
+      "categoryarray": ["0", "5", "10"],
+      "nticks": null,
+      "ticks": "outside",
+      "tickcolor": "rgba(51,51,51,1)",
+      "ticklen": 3.6529680365296811,
+      "tickwidth": 0.66417600664176002,
+      "showticklabels": true,
+      "tickfont": {
+        "color": "rgba(77,77,77,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "tickangle": -0,
+      "showline": false,
+      "linecolor": null,
+      "linewidth": 0,
+      "showgrid": true,
+      "gridcolor": "rgba(235,235,235,1)",
+      "gridwidth": 0.66417600664176002,
+      "zeroline": false,
+      "anchor": "x",
+      "title": {
+        "text": "Number of DEGs",
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.611872146118724
+        }
+      },
+      "hoverformat": ".2f"
+    },
+    "shapes": [
+      {
+        "type": "rect",
+        "fillcolor": "transparent",
+        "line": {
+          "color": "rgba(51,51,51,1)",
+          "width": 0.66417600664176002,
+          "linetype": "solid"
+        },
+        "yref": "paper",
+        "xref": "paper",
+        "x0": 0,
+        "x1": 1,
+        "y0": 0,
+        "y1": 1
+      }
+    ],
+    "showlegend": true,
+    "legend": {
+      "bgcolor": "rgba(255,255,255,1)",
+      "bordercolor": "transparent",
+      "borderwidth": 1.8897637795275593,
+      "font": {
+        "color": "rgba(0,0,0,1)",
+        "family": "",
+        "size": 11.68949771689498
+      },
+      "title": {
+        "text": "Regulation",
+        "font": {
+          "color": "rgba(0,0,0,1)",
+          "family": "",
+          "size": 14.611872146118724
+        }
+      }
+    },
+    "hovermode": "closest",
+    "barmode": "relative"
+  },
+  "config": {
+    "doubleClick": "reset",
+    "modeBarButtonsToAdd": ["hoverclosest", "hovercompare"],
+    "showSendToCloud": false
+  },
+  "source": "A",
+  "attrs": {
+    "2a93697ca74a": {
+      "x": {},
+      "y": {},
+      "fill": {},
+      "type": "bar"
+    }
+  },
+  "cur_data": "2a93697ca74a",
+  "visdat": {
+    "2a93697ca74a": ["function (y) ", "x"]
+  },
+  "highlight": {
+    "on": "plotly_click",
+    "persistent": false,
+    "dynamic": false,
+    "selectize": false,
+    "opacityDim": 0.20000000000000001,
+    "selected": {
+      "opacity": 1
+    },
+    "debounce": 0
+  },
+  "shinyEvents": ["plotly_hover", "plotly_click", "plotly_selected", "plotly_relayout", "plotly_brushed", "plotly_brushing", "plotly_clickannotation", "plotly_doubleclick", "plotly_deselect", "plotly_afterplot", "plotly_sunburstclick"],
+  "base_url": "https://plot.ly"
+}
